@@ -1,4 +1,4 @@
-# My Prompt Sucks ⚡
+# My Prompt Sucks 🙂
 
 Let’s be honest: your AI prompts probably suck. 
 

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyPromptSucks Settings</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="header">
+      <div class="logo-row">
+        <img src="icons/icon-48.png" class="logo-img" alt="Logo" />
+        <h1 class="logo-text">My <span class="logo-accent">Prompt</span> Sucks</h1>
+      </div>
+      <p class="subtitle">Fix terrible prompts instantly.</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Supported Page View -->
+      <div id="supportedView" class="view-container">
+        <div class="main-content">
+          <!-- Input Field Group -->
+          <div class="input-group">
+            <div class="label-row">
+              <label for="apiKey">Gemini API Key</label>
+              <a href="https://aistudio.google.com/" target="_blank" class="get-key-link">Get key &nearr;</a>
+            </div>
+            <div class="input-wrapper">
+              <input 
+                type="password" 
+                id="apiKey" 
+                placeholder="AIzaSy..." 
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button type="button" id="toggleVisibility" class="toggle-btn" title="Toggle visibility">
+                <span class="eye-icon">&#128065;</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="button-group">
+            <button type="button" id="saveBtn" class="btn btn-primary">Save Key</button>
+            <button type="button" id="testBtn" class="btn btn-secondary">Test</button>
+          </div>
+
+          <!-- Live Dynamic Status -->
+          <div id="statusMessage" class="status-message hidden"></div>
+
+          <!-- Keyboard Shortcut Guide -->
+          <div class="shortcut-guide">
+            <div class="shortcut-row">
+              <span class="shortcut-os">Windows</span>
+              <div class="shortcut-keys">
+                <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd>
+              </div>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-os">Mac</span>
+              <div class="shortcut-keys">
+                <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy & Trust Section -->
+          <section class="privacy-section">
+            <h3>🔒 Local & Private</h3>
+            <ul class="privacy-list">
+              <li>API key stays in your browser</li>
+              <li>Works only on supported AI websites</li>
+              <li>No prompt tracking</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+
+      <!-- Unsupported Page View -->
+      <div id="unsupportedView" class="view-container hidden">
+        <div class="unsupported-layout">
+          <div class="lock-container">
+            <svg class="lock-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h2 class="privacy-title">Privacy Active</h2>
+          <p class="privacy-description">
+            MyPromptSucks only runs on supported AI websites to protect your privacy.
+          </p>
+          <p class="privacy-info">
+            Unsupported pages are never accessed or modified.
+          </p>
+          <div class="supported-list-card">
+            <span class="list-title">Supported Sites:</span>
+            <ul class="clean-list">
+              <li>ChatGPT</li>
+              <li>Claude</li>
+              <li>Gemini</li>
+              <li>Perplexity</li>
+            </ul>
+          </div>
+          <p class="action-note">
+            Please open a supported AI platform to use prompt enhancement.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sponsor Section -->
+    <section class="sponsor-section">
+      <p class="sponsor-text">Built with caffeine & bad prompts ☕</p>
+      <div class="sponsor-button-container">
+        <a href="https://github.com/sponsors/seffhunnn" target="_blank" class="sponsor-link-btn">
+          <svg class="heart-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          Sponsor
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>v1.0.0</span>
+    </footer>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

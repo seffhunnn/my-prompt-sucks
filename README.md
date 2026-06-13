@@ -1,5 +1,9 @@
 # My Prompt Sucks 🙂
 
+<p align="center">
+  <img src="icons/logo.png" alt="My Prompt Sucks Logo" width="128" height="128">
+</p>
+
 Let’s be honest: your AI prompts probably suck. 
 
 You write things like *"write a code for login"* or *"make article funny"*, and then wonder why the AI responds with generic, boring garbage. 

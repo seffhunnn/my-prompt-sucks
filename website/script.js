@@ -214,8 +214,9 @@ document.addEventListener("DOMContentLoaded", () => {
     height = canvas.height = window.innerHeight;
   });
 
+  const isMobile = window.innerWidth < 768;
   const particles = [];
-  const particleCount = 130; // Richer atmospheric glow
+  const particleCount = isMobile ? 150 : 400; // Elevated count for dense ambient particle field
   const mouse = { x: null, y: null, radius: 140 };
 
   window.addEventListener("mousemove", (e) => {
@@ -263,8 +264,9 @@ document.addEventListener("DOMContentLoaded", () => {
           let directionX = dx / distance;
           let directionY = dy / distance;
           
-          this.x += directionX * force * 1.5;
-          this.y += directionY * force * 1.5;
+          // Amplified push force for clearly visible mouse interactions
+          this.x += directionX * force * 4.5;
+          this.y += directionY * force * 4.5;
         }
       }
 
@@ -278,11 +280,14 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fillStyle = `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.opacity})`;
-      ctx.shadowColor = `hsla(${this.hue}, ${this.saturation}%, 55%, 0.3)`;
-      ctx.shadowBlur = 4;
+      if (!isMobile) {
+        ctx.shadowColor = `hsla(${this.hue}, ${this.saturation}%, 55%, 0.3)`;
+        ctx.shadowBlur = 4;
+      }
       ctx.fill();
-      // Reset shadow blur
-      ctx.shadowBlur = 0;
+      if (!isMobile) {
+        ctx.shadowBlur = 0;
+      }
     }
   }
 
@@ -911,6 +916,17 @@ Organize a 2-week development sprint for a team of 3 builders.
   function setText(id, t) { const e = document.getElementById(id); if (e && t) e.textContent = t; }
   function showEl(id)      { const e = document.getElementById(id); if (e) e.style.display = ""; }
 
+  function updateDynamicVersions(tag) {
+    if (!tag) return;
+    const versionNum = tag.startsWith('v') ? tag.slice(1) : tag;
+    document.querySelectorAll(".dynamic-version-num").forEach(el => {
+      el.textContent = versionNum;
+    });
+    document.querySelectorAll(".dynamic-version-tag").forEach(el => {
+      el.textContent = tag;
+    });
+  }
+
   // ── Blob-based download (works cross-origin, forces actual file download) ─
 
   function forceDownload(url, filename) {
@@ -1010,6 +1026,7 @@ Organize a 2-week development sprint for a team of 3 builders.
       if (!zipAsset) {
         log("WARNING: No ZIP asset found — falling back to release page");
         markButtonsFallback();
+        updateDynamicVersions("v1.0.2");
         setText("hero-meta-version", "Latest Release");
         setText("wt-meta-version",  "Latest Release");
         ["hero-release-meta", "walkthrough-release-meta"].forEach(id => {
@@ -1031,6 +1048,8 @@ Organize a 2-week development sprint for a team of 3 builders.
       log("RESOLVED — browser_download_url", resolvedZipUrl);
       log("RESOLVED — filename", resolvedName);
       log("RESOLVED — version", resolvedVersion);
+      
+      updateDynamicVersions(resolvedVersion);
 
       // Update UI
       updateButtonLabels(btnLabel);
@@ -1058,6 +1077,7 @@ Organize a 2-week development sprint for a team of 3 builders.
     } catch (err) {
       log("ERROR — API request failed", err.message);
       markButtonsFallback();
+      updateDynamicVersions("v1.0.2");
       setText("hero-meta-version", "Latest Release");
       setText("wt-meta-version",  "Latest Release");
       ["hero-release-meta", "walkthrough-release-meta"].forEach(id => {
@@ -1073,5 +1093,32 @@ Organize a 2-week development sprint for a team of 3 builders.
 
   // Fetch release data
   wireDownloadButtons();
+
+  // 10. CINEMATIC SCROLL PROGRESS BAR
+  const progressBar = document.querySelector(".scroll-progress-bar");
+  if (progressBar) {
+    let ticking = false;
+
+    const updateProgressBar = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight > 0) {
+        const scrollProgress = window.scrollY / scrollHeight;
+        progressBar.style.transform = `scaleX(${scrollProgress})`;
+      } else {
+        progressBar.style.transform = "scaleX(0)";
+      }
+      ticking = false;
+    };
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateProgressBar);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Initial run
+    updateProgressBar();
+  }
 });
 

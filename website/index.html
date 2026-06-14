@@ -57,6 +57,10 @@
         <span></span>
       </button>
     </div>
+    <!-- Cinematic Scroll Progress Bar -->
+    <div class="scroll-progress-container">
+      <div class="scroll-progress-bar"></div>
+    </div>
   </header>
 
   <!-- Mobile Drawer -->
@@ -74,6 +78,9 @@
         GitHub Project
       </a>
     </nav>
+    <div class="drawer-actions">
+      <a href="#setup" class="cta-btn primary-btn drawer-cta-btn">Install Extension</a>
+    </div>
   </div>
 
   <main>
@@ -119,7 +126,7 @@
           <!-- Keyboard Shortcut Guide (Command Strip) -->
           <div class="shortcut-guide-strip">
             <div class="shortcut-platform-box" id="winShortcutBox">
-              <span class="platform-label">Windows / Linux</span>
+              <span class="platform-label">Windows / Linux <span class="system-badge">Your System</span></span>
               <div class="tactile-keys" id="winKeys">
                 <kbd class="tactile-key" data-key="ctrl">Ctrl</kbd>
                 <span class="key-plus">+</span>
@@ -132,7 +139,7 @@
             <div class="shortcut-divider"></div>
             
             <div class="shortcut-platform-box" id="macShortcutBox">
-              <span class="platform-label">macOS</span>
+              <span class="platform-label">macOS <span class="system-badge">Your System</span></span>
               <div class="tactile-keys" id="macKeys">
                 <kbd class="tactile-key" data-key="cmd">Cmd</kbd>
                 <span class="key-plus">+</span>
@@ -360,7 +367,7 @@
                 </div>
                 <div class="folder-box">
                   <span class="file-icon">📁</span>
-                  <span class="file-label">extension/</span>
+                  <span class="file-label">my-prompt-sucks/</span>
                 </div>
               </div>
             </div>
@@ -393,7 +400,7 @@
                         <div class="card-logo">📁</div>
                         <div class="card-text">
                           <strong>My Prompt Sucks</strong>
-                          <span>Version 1.0.0</span>
+                          <span>Version <span class="dynamic-version-num">1.0.0</span></span>
                         </div>
                       </div>
                     </div>
@@ -406,7 +413,7 @@
               <div class="step-badge-num">02</div>
               <h3 class="walkthrough-title">Enable Developer Mode</h3>
               <p class="walkthrough-desc">
-                Open Google Chrome, type <code>chrome://extensions</code> in your URL bar, and press Enter. Locate the **Developer mode** toggle in the top-right corner and turn it **ON**.
+                Open Google Chrome, type <code>chrome://extensions</code> in your URL bar, and press Enter. Locate the <strong>Developer mode</strong> toggle in the top-right corner and turn it <strong>ON</strong>.
               </p>
               <div class="walkthrough-note">
                 <strong>Helpful Note:</strong> Enabling Developer Mode is standard and completely safe. It allows Chrome to run extensions directly from local folders on your machine.
@@ -420,7 +427,7 @@
               <div class="step-badge-num">03</div>
               <h3 class="walkthrough-title">Load the Extension</h3>
               <p class="walkthrough-desc">
-                With Developer Mode enabled, click the **Load unpacked** button in the top-left corner of the extensions page. In the file explorer, select the extracted <code>my-prompt-sucks</code> folder.
+                With Developer Mode enabled, click the <strong>Load unpacked</strong> button in the top-left corner of the extensions page. In the file explorer, select the extracted <code>my-prompt-sucks</code> folder.
               </p>
               <div class="walkthrough-note">
                 <strong>Helpful Note:</strong> The extension will instantly load, and its icon will appear in your browser's extension list (click the puzzle icon to pin it!).
@@ -493,7 +500,7 @@
               <div class="step-badge-num">05</div>
               <h3 class="walkthrough-title">Paste & Save Your Key</h3>
               <p class="walkthrough-desc">
-                Click the extension icon in your Chrome toolbar. Paste your Gemini API key into the input field and click **Save Key**.
+                Click the extension icon in your Chrome toolbar. Paste your Gemini API key into the input field and click <strong>Save Key</strong>.
               </p>
               <div class="walkthrough-note">
                 <strong>Helpful Note:</strong> Once the key is configured, you will see a "Connection successful!" alert. The extension is now active.
@@ -548,7 +555,7 @@
               <div class="step-badge-num">06</div>
               <h3 class="walkthrough-title">Optimize Prompts Inline</h3>
               <p class="walkthrough-desc">
-                Open ChatGPT, Claude, Gemini, or Perplexity. Type a rough draft query, then press the shortcut (or <code>⌘ + Shift + E</code> on Mac) to instantly enhance it in the textbox.
+                Open ChatGPT, Claude, Gemini, or Perplexity. Type a rough draft query, then press the shortcut (<strong>Ctrl + Shift + E</strong> on Windows/Linux or <strong>Cmd + Shift + E</strong> on Mac) to instantly enhance it in the textbox.
               </p>
               <div class="walkthrough-note">
                 <strong>Compatible Hosts:</strong> Works seamlessly across ChatGPT, Anthropic Claude, Google Gemini, and Perplexity AI.
@@ -782,7 +789,7 @@
               </div>
               <div class="setup-shortcut-os">
                 <span>macOS:</span>
-                <code>⌘+Shift+E</code>
+                <code>Cmd+Shift+E</code>
               </div>
             </div>
 
@@ -1087,21 +1094,55 @@
   <!-- Footer Section -->
   <footer class="footer">
     <div class="container footer-container">
-      <div class="footer-left">
-        <div class="footer-logo">
-          <img src="assets/icon-16.png" alt="My Prompt Sucks logo inline" class="footer-logo-img">
-          <span>My Prompt Sucks</span>
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="footer-logo">
+            <img src="assets/icon-48.png" alt="My Prompt Sucks logo" class="footer-logo-img">
+            <span>My Prompt Sucks</span>
+          </a>
+          <p class="footer-subtitle">Optimizing your workflow, one prompt at a time.</p>
+          <div class="footer-badges">
+            <span class="footer-badge-item dynamic-version-tag">v1.0.2</span>
+            <span class="footer-badge-item"><span class="green-dot"></span>Active Build</span>
+          </div>
         </div>
-        <p class="footer-credit">Handcrafted with caffeine and bad prompts by Mohd Saif Ansari.</p>
-        <p class="footer-license">© 2026. Proprietary Source-Visible License. Personal use only.</p>
+        
+        <div class="footer-sponsor-cta">
+          <span class="sponsor-cta-text">Support the project & fuel my energy</span>
+          <a href="https://github.com/sponsors/seffhunnn" target="_blank" rel="noopener noreferrer" class="premium-sponsor-btn">
+            <svg class="heart-icon-pink" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span>Sponsor on GitHub</span>
+            <span class="btn-shine"></span>
+          </a>
+        </div>
       </div>
 
-      <div class="footer-right">
-        <div class="footer-links-group">
-          <span class="group-title">Links</span>
-          <a href="https://github.com/seffhunnn/my-prompt-sucks" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="https://github.com/sponsors/seffhunnn" target="_blank" rel="noopener noreferrer">GitHub Sponsors</a>
-          <a href="https://linkedin.com/in/seffhunnn" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <div class="footer-divider"></div>
+
+      <div class="footer-bottom">
+        <div class="footer-left-info">
+          <p class="footer-credit">Made with caffeine & bad prompts by <a href="https://linkedin.com/in/seffhunnn" target="_blank" rel="noopener noreferrer" class="credit-link">Mohd Saif Ansari</a>.</p>
+          <p class="footer-license">© 2026. Proprietary Source-Visible License. Personal use only.</p>
+        </div>
+
+        <div class="footer-socials">
+          <a href="https://github.com/seffhunnn" target="_blank" rel="noopener noreferrer" class="social-icon-btn github-icon" title="GitHub Repository">
+            <svg class="icon-svg" viewBox="0 0 24 24" width="20" height="20">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+          <a href="https://linkedin.com/in/seffhunnn" target="_blank" rel="noopener noreferrer" class="social-icon-btn linkedin-icon" title="LinkedIn Profile">
+            <svg class="icon-svg" viewBox="0 0 24 24" width="20" height="20">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+          </a>
+          <a href="https://github.com/sponsors/seffhunnn" target="_blank" rel="noopener noreferrer" class="social-icon-btn sponsor-icon" title="Sponsor Project">
+            <svg class="icon-svg" viewBox="0 0 24 24" width="20" height="20">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </a>
         </div>
       </div>
     </div>

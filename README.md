@@ -1,109 +1,136 @@
-# My Prompt Sucks 🙂
+<div align="center">
+  <img src="website/assets/icon-48.png" width="84" height="84" alt="My Prompt Sucks Logo" />
+  <h1>My Prompt Sucks</h1>
+  <p><em>Instantly optimize poorly structured AI prompts inline using the Gemini API and a single keyboard shortcut.</em></p>
 
-Let’s be honest: your AI prompts probably suck. 
+  <p>
+    <a href="https://github.com/seffhunnn/my-prompt-sucks/releases"><img src="https://img.shields.io/badge/Chrome_Extension-v1.0.2-yellow?style=flat-square&logo=google-chrome&logoColor=white&color=ffb800" alt="Chrome Extension" /></a>
+    <img src="https://img.shields.io/badge/Manifest-V3-black?style=flat-square&logo=google-chrome&logoColor=white&color=222222" alt="Manifest V3" />
+    <img src="https://img.shields.io/badge/Privacy-100%25_Local-green?style=flat-square&logo=shield&logoColor=white&color=00c853" alt="Privacy First" />
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-Proprietary-red?style=flat-square&color=ea4335" alt="License" /></a>
+    <a href="https://github.com/sponsors/seffhunnn"><img src="https://img.shields.io/badge/Sponsor-seffhunnn-pink?style=flat-square&logo=github-sponsors&logoColor=white&color=db61a2" alt="Sponsor" /></a>
+  </p>
 
-You write things like *"write a code for login"* or *"make article funny"*, and then wonder why the AI responds with generic, boring garbage. 
-
-**My Prompt Sucks** is a minimal, lightweight Chrome extension that intercepts your draft prompt, refactors it into a structured, professional, and AI-optimized format via the Gemini API, and replaces it inline. No prompt engineering PhD required.
+  <p>
+    <a href="https://github.com/seffhunnn"><img src="https://img.shields.io/badge/GitHub-seffhunnn-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub Profile" /></a>
+    <a href="https://linkedin.com/in/seffhunnn"><img src="https://img.shields.io/badge/LinkedIn-Saif_Ansari-0A66C2?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn Profile" /></a>
+  </p>
+</div>
 
 ---
 
-## The Workflow
+Let's be honest: your AI prompts probably suck. 
 
-1. Type a terrible draft prompt on any supported AI chatbox.
-2. Press the shortcut.
-3. Watch the extension improve it inline.
-4. Hit enter. Get a better response.
+You write things like *"write login page code"* or *"make article funny"*, and then wonder why the AI responds with generic, boring boilerplate. 
+
+**My Prompt Sucks** is a minimal, ultra-lightweight Chrome extension that intercepts your draft prompt inline, refactors it into a structured, professional, and context-rich system prompt via the Gemini API, and inserts it back into your textbox. No prompt engineering PhD required.
+
+---
+
+## ⚡ The Workflow
+
+1. **Write**: Type a rough draft prompt in any supported AI chatbox.
+2. **Trigger**: Hit the keyboard shortcut.
+3. **Refactor**: Watch the extension instantly restructure your draft inline.
+4. **Send**: Hit Enter and get a high-quality, high-performance response.
 
 ### Keyboard Shortcuts
-* **Windows/Linux**: `Ctrl` + `Shift` + `E`
-* **macOS**: `Command` + `Shift` + `E`
+
+| Platform | Shortcut Keycaps |
+| :--- | :--- |
+| **Windows / Linux** | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd> |
+| **macOS** | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd> |
 
 ---
 
-## Supported Platforms
+## 🌐 Supported Hosts
 
-* [ChatGPT](https://chatgpt.com)
-* [Claude](https://claude.ai)
-* [Gemini](https://gemini.google.com)
-* [Perplexity](https://www.perplexity.ai)
+Intelligently targets editor inputs across the industry's leading chat models:
 
-*Note: The extension uses site configurations to locate the editor fields, which allows it to cleanly inject text without breaking React state bindings.*
+* **[ChatGPT](https://chatgpt.com)**
+* **[Anthropic Claude](https://claude.ai)**
+* **[Google Gemini](https://gemini.google.com)**
+* **[Perplexity AI](https://www.perplexity.ai)**
+
+*Note: The extension targets inputs dynamically at the DOM layer, preventing React or Svelte virtual DOM bindings from breaking during injection.*
 
 ---
 
-## Project Structure
+## 📦 Project Structure
+
+A clean, modular layout separating the Chrome extension from the marketing website:
 
 ```
 my-prompt-sucks/
-├── extension/          # Chrome extension (packaged in GitHub Releases)
-│   ├── manifest.json
-│   ├── background.js
-│   ├── content.js
-│   ├── popup.html / popup.css / popup.js
-│   └── icons/
-└── website/            # Landing page (deployed separately)
-    ├── index.html
-    ├── style.css
-    ├── script.js
-    └── assets/
+├── extension/          # Chrome extension package (packaged in GitHub Releases)
+│   ├── manifest.json   # Extension configuration (Manifest V3)
+│   ├── background.js   # Background service worker (API execution & shortcut bindings)
+│   ├── content.js      # Scoped DOM injector & input interceptor
+│   ├── popup.html      # Connection key configuration panel
+│   └── icons/          # Extension graphics
+└── website/            # Marketing & landing website (deployed separately)
+    ├── index.html      # High-end landing page
+    ├── style.css       # Custom cinematic CSS variables
+    ├── script.js       # Dynamic release parsing & particle canvas
+    └── assets/         # Visual media & screenshots
 ```
 
 ---
 
-## Installation
+## 🔧 Installation Guide
 
-The easiest way to install the extension:
+Deploy the extension locally in under 2 minutes:
 
-1. **Download the extension**: Go to the **[Releases](../../releases/latest)** section and download the latest `my-prompt-sucks-vX.X.X.zip` file, then extract it on your computer.
-2. **Open Extensions page**: Open Google Chrome and navigate to `chrome://extensions/`.
-3. **Developer Mode**: Toggle **Developer mode** in the top right corner.
-4. **Load Unpacked**: Click **Load unpacked** and select the extracted `extension/` folder (or the extracted folder itself if unzipped).
-5. **Add API Key**: 
-   - Click the extensions puzzle icon in your toolbar and select **My Prompt Sucks**.
-   - Paste your Gemini API key (you can get a free key from [Google AI Studio](https://aistudio.google.com/)).
-   - Click **Save Key** and run a quick **Test** to make sure it's active.
-
----
-
-## Privacy First 🛡️
-
-I built this for us, so privacy is built-in:
-* **Local Storage**: Your Gemini API key is stored in your browser (`chrome.storage.local`).
-* **No Tracking**: This never collects, logs, or looks at your prompts. 
-* **Scoped Execution**: The extension is restricted in the manifest to *only* run on the four supported AI websites. It stays completely inactive on other domains.
+1. **Download Build**: Go to **[Releases](../../releases/latest)**, download `my-prompt-sucks-v1.0.2.zip`, and extract it.
+2. **Open Extensions**: Open Google Chrome and navigate to `chrome://extensions/`.
+3. **Developer Mode**: Toggle **Developer mode** **ON** in the top-right corner.
+4. **Load Unpacked**: Click **Load unpacked** in the top-left and select the extracted `my-prompt-sucks/` folder.
+5. **Link API Key**:
+   - Get a free API connection key from **[Google AI Studio](https://aistudio.google.com/)**.
+   - Click the extension icon in your Chrome toolbar, paste your key, and click **Save Connection**.
 
 ---
 
-## Tech Stack
+## 🛡️ Privacy Architecture
 
-* **Vanilla JavaScript** (no complex frameworks or build steps)
-* **Manifest V3** Chrome Extension APIs
-* **Gemini API** (`gemini-2.5-flash` via secure background workers)
+Built for developers who value security and data privacy:
 
----
-
-## Support
-
-Built with caffeine and bad prompts. If this tool saves you time, feel free to support the developer:
-
-* **Sponsor the project**: [GitHub Sponsors](https://github.com/sponsors/seffhunnn)
+* **Zero Backend Servers**: Prompts are dispatched directly from your browser to Google's Gemini API endpoints.
+* **100% Local Storage**: Your API credentials are saved only inside Chrome's local sandboxed storage (`chrome.storage.local`).
+* **Strict Scoping**: The extension remains fully inert on all other pages. Permissions are strictly scoped to the four target AI domains.
 
 ---
 
-## Roadmap
+## 🛠️ Tech Stack
 
-- [ ] Support additional platforms (Grok, Copilot, Poe)
-- [ ] Add an inline floating trigger button next to prompt fields
-- [ ] Support custom output "tones" (e.g. Creative, Concise, Code-focused)
+* **Vanilla JavaScript** — Zero framework bloated builds or translation latency.
+* **Manifest V3** — Standardized background service worker lifecycle.
+* **Gemini API** — Intercepts prompts via `gemini-2.5-flash` for instant, context-aware instructions.
 
 ---
 
-## License
+## 📈 Roadmap
 
-This project is source-visible but proprietary. 
+- [ ] Add POE, Grok, and Microsoft Copilot host configurations
+- [ ] Add an inline floating trigger button inside chat boxes
+- [ ] Incorporate custom output presets (e.g. Concise, Code-focused, Creative)
 
-* **Allowed**: You are welcome to view the code, download it for personal use, and learn from it.
-* **Restricted**: Redistribution, reuploading, public forks/clones, modification for distribution, and commercial use are strictly prohibited without the author's explicit written permission.
+---
 
-For details, see the [LICENSE](LICENSE) file. Please contact the author before redistributing or commercially using this project.
+## 💖 Support the Project
+
+Built with caffeine and bad prompts. If this tool saves you time, feel free to fuel my energy:
+
+* **Sponsor Project**: [GitHub Sponsors](https://github.com/sponsors/seffhunnn)
+* **LinkedIn**: [Connect on LinkedIn](https://linkedin.com/in/seffhunnn)
+
+---
+
+## 📄 License
+
+This project is source-visible but proprietary.
+
+* **Allowed**: You are welcome to view the code, download it, fork it, and modify it for **personal use only**.
+* **Restricted**: Redistribution, reuploading, hosting public forks/clones, publishing modifications, and any commercial use are strictly prohibited without the author's explicit written permission.
+
+For details, inspect the **[LICENSE](LICENSE)** file.

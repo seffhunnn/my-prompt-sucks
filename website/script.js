@@ -68,6 +68,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
+  // ── KEYBOARD SHORTCUT SCROLL TO SHOWCASE ───────────────────────────────────
+  window.addEventListener("keydown", (e) => {
+    // Check for (Ctrl or Cmd) + Shift + E
+    const isCmdOrCtrl = e.ctrlKey || e.metaKey;
+    const isShift = e.shiftKey;
+    const isE = e.key === 'e' || e.key === 'E' || e.keyCode === 69;
+
+    if (isCmdOrCtrl && isShift && isE) {
+      e.preventDefault();
+      const targetElement = document.getElementById("playground");
+      if (targetElement && lenis) {
+        lenis.scrollTo(targetElement, {
+          offset: -80 // Offset navbar height
+        });
+      }
+    }
+  });
+
+
   // 4. GSAP & SCROLL TRIGGER ANIMATIONS
   gsap.registerPlugin(ScrollTrigger);
 

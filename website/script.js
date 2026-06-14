@@ -48,14 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Intercept anchor clicks for smooth scrolling via Lenis
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+      // Skip download buttons — they handle their own navigation
+      if (this.classList.contains('download-btn')) return;
       e.preventDefault();
       const targetId = this.getAttribute('href');
-      
+
       if (targetId === '#') {
         lenis.scrollTo(0);
         return;
       }
-      
+
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
         lenis.scrollTo(targetElement, {
@@ -887,8 +889,8 @@ Organize a 2-week development sprint for a team of 3 builders.
   const RELEASES_PAGE = `https://github.com/${REPO}/releases/latest`;
   const GITHUB_API    = `https://api.github.com/repos/${REPO}/releases/latest`;
 
-  // All primary download button IDs
-  const DL_BUTTON_IDS = ["walkthrough-download-btn", "setup-download-btn"];
+  // All primary download buttons — selected by shared class
+  const DL_BUTTONS_SELECTOR = ".download-btn";
 
   // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -996,9 +998,7 @@ Organize a 2-week development sprint for a team of 3 builders.
       const btnLabel    = version ? `Download ${version}` : "Download Extension";
 
       // Resolve all download buttons
-      DL_BUTTON_IDS.forEach(id => {
-        const btn = document.getElementById(id);
-        if (!btn) return;
+      document.querySelectorAll(DL_BUTTONS_SELECTOR).forEach(btn => {
         resolveButton(btn, {
           label: btnLabel,
           downloadUrl,
@@ -1046,9 +1046,8 @@ Organize a 2-week development sprint for a team of 3 builders.
       // ── Graceful fallback ─────────────────────────────────────────────────
       console.info("[My Prompt Sucks] GitHub API unavailable, falling back gracefully.", err.message);
 
-      DL_BUTTON_IDS.forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) applyFallback(btn);
+      document.querySelectorAll(DL_BUTTONS_SELECTOR).forEach(btn => {
+        applyFallback(btn);
       });
 
       // Show fallback version label in meta strips

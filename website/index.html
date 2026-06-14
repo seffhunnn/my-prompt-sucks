@@ -96,7 +96,13 @@
           </p>
           
           <div class="hero-btns">
-            <a href="#first-time-setup" id="hero-install-btn" class="cta-btn primary-btn size-large">Install Free</a>
+            <a href="#first-time-setup" id="hero-install-btn" class="cta-btn primary-btn size-large download-btn is-loading">
+              <svg class="setup-btn-icon btn-dl-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              <span class="btn-label">Fetching latest build…</span>
+              <span class="btn-loader" aria-hidden="true"></span>
+            </a>
             <a href="#playground" class="cta-btn outline-btn size-large">Showcase</a>
           </div>
 
@@ -313,7 +319,7 @@
                 Download the latest release directly from GitHub. The ZIP contains only the extension files — clean, minimal, ready to load.
               </p>
               <div class="walkthrough-actions">
-                <a href="https://github.com/seffhunnn/my-prompt-sucks/releases/latest" id="walkthrough-download-btn" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn highlight-yellow is-loading">
+                <a href="https://github.com/seffhunnn/my-prompt-sucks/releases/latest" id="walkthrough-download-btn" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn highlight-yellow is-loading download-btn">
                   <svg class="setup-btn-icon btn-dl-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                   </svg>
@@ -607,7 +613,7 @@
             </div>
 
             <div class="setup-card-actions">
-              <a href="https://github.com/seffhunnn/my-prompt-sucks/releases/latest" id="setup-download-btn" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn is-loading">
+              <a href="https://github.com/seffhunnn/my-prompt-sucks/releases/latest" id="setup-download-btn" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn is-loading download-btn">
                 <svg class="setup-btn-icon btn-dl-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                 </svg>

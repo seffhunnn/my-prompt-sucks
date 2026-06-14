@@ -3354,7 +3354,7 @@ strong {
 }
 
 /* Button loading state */
-.setup-btn.is-loading {
+.download-btn.is-loading {
   pointer-events: none;
   opacity: 0.72;
   background-image: linear-gradient(
@@ -3367,7 +3367,7 @@ strong {
   animation: btn-shimmer 1.6s ease infinite;
 }
 
-.setup-btn.is-loading .btn-dl-icon {
+.download-btn.is-loading .btn-dl-icon {
   opacity: 0.4;
 }
 
@@ -3383,7 +3383,7 @@ strong {
   flex-shrink: 0;
 }
 
-.setup-btn.is-loading .btn-loader {
+.download-btn.is-loading .btn-loader {
   display: inline-block;
 }
 
@@ -3393,7 +3393,7 @@ strong {
 }
 
 /* Resolved button: remove loading state instantly but transition in */
-.setup-btn.is-resolved {
+.download-btn.is-resolved {
   pointer-events: auto;
   opacity: 1;
   background-image: none;
@@ -3403,7 +3403,7 @@ strong {
 }
 
 /* Fallback state — API failed */
-.setup-btn.is-fallback {
+.download-btn.is-fallback {
   pointer-events: auto;
   opacity: 0.85;
   animation: none;

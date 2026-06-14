@@ -879,192 +879,199 @@ Organize a 2-week development sprint for a team of 3 builders.
   animateShortcutLoop();
 
   // ─── GITHUB LATEST RELEASE — PREMIUM DOWNLOAD SYSTEM ─────────────────────
-  // Fetches the latest release metadata from GitHub API and:
-  //  1. Resolves download buttons from loading → version-labelled
-  //  2. Populates release metadata strips (version, date, size)
-  //  3. Updates trust pills with real size info
-  //  4. Gracefully degrades if API is unreachable
-  
-  const REPO          = "seffhunnn/my-prompt-sucks";
-  const RELEASES_PAGE = `https://github.com/${REPO}/releases/latest`;
-  const GITHUB_API    = `https://api.github.com/repos/${REPO}/releases/latest`;
+  const REPO       = "seffhunnn/my-prompt-sucks";
+  const GITHUB_API = `https://api.github.com/repos/${REPO}/releases/latest`;
+  const FALLBACK   = `https://github.com/${REPO}/releases/latest`;
+  const log        = (label, data) => console.log(`[MPS Download] ${label}`, data ?? "");
 
-  // All primary download buttons — selected by shared class
-  const DL_BUTTONS_SELECTOR = ".download-btn";
+  // Shared state — set once by the API, read by every click handler
+  let resolvedZipUrl  = null;   // browser_download_url of the ZIP asset
+  let resolvedName    = null;   // asset filename (e.g. my-prompt-sucks-v1.0.2.zip)
+  let resolvedVersion = null;   // tag_name (e.g. v1.0.2)
 
   // ── Helpers ──────────────────────────────────────────────────────────────
 
   function formatBytes(bytes) {
     if (!bytes || bytes === 0) return null;
     const mb = bytes / (1024 * 1024);
-    return mb >= 1
-      ? `${mb.toFixed(1)} MB`
-      : `${(bytes / 1024).toFixed(0)} KB`;
+    return mb >= 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`;
   }
 
-  function relativeDate(isoString) {
-    if (!isoString) return null;
-    const diff = Date.now() - new Date(isoString).getTime();
-    const days  = Math.floor(diff / 86_400_000);
-    const hours = Math.floor(diff / 3_600_000);
-    if (days === 0)  return hours === 0 ? "just now" : `${hours}h ago`;
-    if (days === 1)  return "yesterday";
-    if (days < 7)   return `${days} days ago`;
-    if (days < 30)  return `${Math.floor(days / 7)}w ago`;
-    if (days < 365) return `${Math.floor(days / 30)}mo ago`;
-    return `${Math.floor(days / 365)}y ago`;
+  function relativeDate(iso) {
+    if (!iso) return null;
+    const d = Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
+    if (d === 0) return "today";
+    if (d === 1) return "yesterday";
+    if (d < 7)   return `${d} days ago`;
+    if (d < 30)  return `${Math.floor(d / 7)}w ago`;
+    if (d < 365) return `${Math.floor(d / 30)}mo ago`;
+    return `${Math.floor(d / 365)}y ago`;
   }
 
-  function setElText(id, text) {
-    const el = document.getElementById(id);
-    if (el && text) el.textContent = text;
+  function setText(id, t) { const e = document.getElementById(id); if (e && t) e.textContent = t; }
+  function showEl(id)      { const e = document.getElementById(id); if (e) e.style.display = ""; }
+
+  // ── Blob-based download (works cross-origin, forces actual file download) ─
+
+  function forceDownload(url, filename) {
+    log("Starting blob download", { url, filename });
+    const a = document.createElement("a");
+    a.style.display = "none";
+    document.body.appendChild(a);
+
+    fetch(url)
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.blob(); })
+      .then(blob => {
+        const blobUrl = URL.createObjectURL(blob);
+        a.href     = blobUrl;
+        a.download = filename;
+        a.click();
+        log("Download triggered via blob", filename);
+        setTimeout(() => { URL.revokeObjectURL(blobUrl); a.remove(); }, 1000);
+      })
+      .catch(err => {
+        log("Blob download failed, falling back to navigation", err.message);
+        a.remove();
+        window.open(url, "_blank");
+      });
   }
 
-  function showEl(id) {
-    const el = document.getElementById(id);
-    if (el) el.style.display = "";
+  // ── Wire every .download-btn to force-download the ZIP ───────────────────
+
+  function attachDownloadListeners() {
+    document.querySelectorAll(".download-btn").forEach(btn => {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (resolvedZipUrl) {
+          forceDownload(resolvedZipUrl, resolvedName);
+        } else {
+          log("No resolved ZIP — opening release page as fallback");
+          window.open(FALLBACK, "_blank");
+        }
+      });
+    });
   }
 
-  function resolveButton(btn, { label, downloadUrl, assetName, isDirect }) {
-    // Fade label out, swap, fade in
-    const labelEl = btn.querySelector(".btn-label");
-    if (labelEl) {
-      labelEl.style.opacity = "0";
-      setTimeout(() => {
-        labelEl.textContent = label;
-        labelEl.style.opacity = "1";
-      }, 180);
-    }
+  // ── Update button labels after API resolves ──────────────────────────────
 
-    btn.href = downloadUrl;
-    btn.classList.remove("is-loading");
-    btn.classList.add("is-resolved");
-
-    if (isDirect && assetName) {
-      btn.setAttribute("download", assetName);
-      btn.removeAttribute("target");
-      btn.removeAttribute("rel");
-    } else {
-      btn.setAttribute("target", "_blank");
-      btn.setAttribute("rel", "noopener noreferrer");
-    }
+  function updateButtonLabels(label) {
+    document.querySelectorAll(".download-btn").forEach(btn => {
+      btn.classList.remove("is-loading");
+      btn.classList.add("is-resolved");
+      const lbl = btn.querySelector(".btn-label");
+      if (lbl) {
+        lbl.style.transition = "opacity 0.18s ease";
+        lbl.style.opacity = "0";
+        setTimeout(() => { lbl.textContent = label; lbl.style.opacity = "1"; }, 180);
+      }
+    });
   }
 
-  function applyFallback(btn) {
-    const labelEl = btn.querySelector(".btn-label");
-    if (labelEl) labelEl.textContent = "View Latest Release";
-    btn.href = RELEASES_PAGE;
-    btn.setAttribute("target", "_blank");
-    btn.setAttribute("rel", "noopener noreferrer");
-    btn.classList.remove("is-loading");
-    btn.classList.add("is-fallback");
+  function markButtonsFallback() {
+    document.querySelectorAll(".download-btn").forEach(btn => {
+      btn.classList.remove("is-loading");
+      btn.classList.add("is-fallback");
+      const lbl = btn.querySelector(".btn-label");
+      if (lbl) lbl.textContent = "View Latest Release";
+    });
   }
 
-  function populateMetaStrip({ versionId, dateId, sizeId, sizeSepId, stripId, version, date, size }) {
-    if (version) setElText(versionId, version);
-    if (date)    setElText(dateId, date);
-    if (size) {
-      setElText(sizeId, `${size} · extension only`);
-      showEl(sizeSepId);
-    }
+  // ── Populate metadata strips ─────────────────────────────────────────────
+
+  function populateMeta({ vId, dId, sId, sSep, stripId, version, date, size }) {
+    if (version) setText(vId, version);
+    if (date)    setText(dId, date);
+    if (size) { setText(sId, `${size} · extension only`); showEl(sSep); }
     const strip = document.getElementById(stripId);
     if (strip) strip.classList.add("is-visible");
   }
 
-  // ── Main fetch ────────────────────────────────────────────────────────────
+  // ── Main: fetch latest release and wire everything up ────────────────────
 
   async function wireDownloadButtons() {
+    log("Fetching latest release from", GITHUB_API);
+
     try {
       const res = await fetch(GITHUB_API, {
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-          "User-Agent": "My-Prompt-Sucks-Website"
-        }
+        headers: { Accept: "application/vnd.github.v3+json" }
       });
-
+      log("API response status", res.status);
       if (!res.ok) throw new Error(`GitHub API ${res.status}`);
 
-      const release   = await res.json();
-      const zipAsset  = release.assets?.find(a =>
-        a.name.endsWith(".zip") && a.name.includes("my-prompt-sucks")
+      const release = await res.json();
+      log("Release object", release.tag_name, release);
+
+      // Find the ZIP asset whose name contains "my-prompt-sucks"
+      const zipAsset = (release.assets || []).find(a =>
+        a.name && a.name.endsWith(".zip") && a.name.includes("my-prompt-sucks")
       );
+      log("ZIP asset found", zipAsset ? zipAsset.name : "NONE", zipAsset);
 
-      const version     = release.tag_name  || null;
-      const publishedAt = release.published_at || null;
-      const size        = zipAsset ? formatBytes(zipAsset.size) : null;
-      const dateLabel   = relativeDate(publishedAt);
-      const downloadUrl = zipAsset?.browser_download_url || RELEASES_PAGE;
-      const isDirect    = !!zipAsset;
-      const btnLabel    = version ? `Download ${version}` : "Download Extension";
-
-      // Resolve all download buttons
-      document.querySelectorAll(DL_BUTTONS_SELECTOR).forEach(btn => {
-        resolveButton(btn, {
-          label: btnLabel,
-          downloadUrl,
-          assetName: zipAsset?.name || null,
-          isDirect
+      if (!zipAsset) {
+        log("WARNING: No ZIP asset found — falling back to release page");
+        markButtonsFallback();
+        setText("hero-meta-version", "Latest Release");
+        setText("wt-meta-version",  "Latest Release");
+        ["hero-release-meta", "walkthrough-release-meta"].forEach(id => {
+          const el = document.getElementById(id); if (el) el.classList.add("is-visible");
         });
+        const tp = document.getElementById("setup-trust-pill");
+        if (tp) tp.classList.add("is-visible");
+        return;
+      }
+
+      // Store resolved values for click handlers
+      resolvedZipUrl  = zipAsset.browser_download_url;
+      resolvedName    = zipAsset.name;
+      resolvedVersion = release.tag_name || "";
+      const size      = formatBytes(zipAsset.size);
+      const date      = relativeDate(release.published_at);
+      const btnLabel  = `Download ${resolvedVersion}`;
+
+      log("RESOLVED — browser_download_url", resolvedZipUrl);
+      log("RESOLVED — filename", resolvedName);
+      log("RESOLVED — version", resolvedVersion);
+
+      // Update UI
+      updateButtonLabels(btnLabel);
+
+      populateMeta({
+        vId: "hero-meta-version", dId: "hero-meta-date",
+        sId: "hero-meta-size", sSep: "hero-meta-size-sep", stripId: "hero-release-meta",
+        version: resolvedVersion, date, size
+      });
+      populateMeta({
+        vId: "wt-meta-version", dId: "wt-meta-date",
+        sId: "wt-meta-size", sSep: "wt-meta-size-sep", stripId: "walkthrough-release-meta",
+        version: resolvedVersion, date, size
       });
 
-      // Populate hero metadata strip
-      populateMetaStrip({
-        versionId: "hero-meta-version",
-        dateId:    "hero-meta-date",
-        sizeId:    "hero-meta-size",
-        sizeSepId: "hero-meta-size-sep",
-        stripId:   "hero-release-meta",
-        version,
-        date:      dateLabel,
-        size
-      });
-
-      // Populate walkthrough metadata strip
-      populateMetaStrip({
-        versionId: "wt-meta-version",
-        dateId:    "wt-meta-date",
-        sizeId:    "wt-meta-size",
-        sizeSepId: "wt-meta-size-sep",
-        stripId:   "walkthrough-release-meta",
-        version,
-        date:      dateLabel,
-        size
-      });
-
-      // Update trust pill with size if available
-      const trustPill = document.getElementById("setup-trust-pill");
-      const trustText = document.getElementById("setup-trust-text");
-      if (trustPill && trustText) {
-        if (size) {
-          trustText.textContent = `${size} · extension-only · no website files`;
-          trustPill.classList.add("has-size");
-        }
-        trustPill.classList.add("is-visible");
+      const tp = document.getElementById("setup-trust-pill");
+      const tt = document.getElementById("setup-trust-text");
+      if (tp && tt && size) {
+        tt.textContent = `${size} · extension-only · no website files`;
+        tp.classList.add("has-size", "is-visible");
+      } else if (tp) {
+        tp.classList.add("is-visible");
       }
 
     } catch (err) {
-      // ── Graceful fallback ─────────────────────────────────────────────────
-      console.info("[My Prompt Sucks] GitHub API unavailable, falling back gracefully.", err.message);
-
-      document.querySelectorAll(DL_BUTTONS_SELECTOR).forEach(btn => {
-        applyFallback(btn);
-      });
-
-      // Show fallback version label in meta strips
-      ["hero-meta-version", "wt-meta-version"].forEach(id => {
-        setElText(id, "Latest Release");
-      });
+      log("ERROR — API request failed", err.message);
+      markButtonsFallback();
+      setText("hero-meta-version", "Latest Release");
+      setText("wt-meta-version",  "Latest Release");
       ["hero-release-meta", "walkthrough-release-meta"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add("is-visible");
+        const el = document.getElementById(id); if (el) el.classList.add("is-visible");
       });
-
-      // Trust pill still shown with generic text
-      const trustPill = document.getElementById("setup-trust-pill");
-      if (trustPill) trustPill.classList.add("is-visible");
+      const tp = document.getElementById("setup-trust-pill");
+      if (tp) tp.classList.add("is-visible");
     }
   }
 
+  // Attach click handlers immediately (no API dependency)
+  attachDownloadListeners();
+
+  // Fetch release data
   wireDownloadButtons();
 });
 

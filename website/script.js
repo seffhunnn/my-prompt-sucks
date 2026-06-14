@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const isMobile = window.innerWidth < 768;
   const particles = [];
-  const particleCount = isMobile ? 150 : 400; // Elevated count for dense ambient particle field
+  const particleCount = isMobile ? 80 : 180; // Balanced count for a clean, non-crowded drift
   const mouse = { x: null, y: null, radius: 140 };
 
   window.addEventListener("mousemove", (e) => {

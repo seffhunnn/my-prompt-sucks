@@ -4,7 +4,7 @@
   <p><em>Instantly optimize poorly structured AI prompts inline using the Gemini API and a single keyboard shortcut.</em></p>
 
   <p>
-    <a href="https://github.com/seffhunnn/my-prompt-sucks/releases"><img src="https://img.shields.io/badge/Chrome_Extension-v1.0.2-yellow?style=flat-square&logo=google-chrome&logoColor=white&color=ffb800" alt="Chrome Extension" /></a>
+    <a href="https://github.com/seffhunnn/my-prompt-sucks/releases"><img src="https://img.shields.io/badge/Chrome_Extension-v1.0.4-yellow?style=flat-square&logo=google-chrome&logoColor=white&color=ffb800" alt="Chrome Extension" /></a>
     <img src="https://img.shields.io/badge/Manifest-V3-black?style=flat-square&logo=google-chrome&logoColor=white&color=222222" alt="Manifest V3" />
     <img src="https://img.shields.io/badge/Privacy-100%25_Local-green?style=flat-square&logo=shield&logoColor=white&color=00c853" alt="Privacy First" />
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-Proprietary-red?style=flat-square&color=ea4335" alt="License" /></a>

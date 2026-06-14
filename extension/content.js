@@ -241,30 +241,45 @@ function enhancePromptProcess(element, originalText) {
   // Create dynamic status loading badge
   const loadingBadge = showFloatingBadge(element, "⚡ Improving prompt...", "info");
 
-  chrome.runtime.sendMessage(
-    { action: "enhancePrompt", prompt: originalText },
-    (response) => {
-      // Safely cleanup loaders
-      element.classList.remove("myprompt-loading");
-      if (loadingBadge) loadingBadge.remove();
+  // Guard against invalidated extension context (reload / update / uninstall)
+  if (!chrome.runtime?.id) {
+    element.classList.remove("myprompt-loading");
+    if (loadingBadge) loadingBadge.remove();
+    showFloatingBadge(element, "Extension reloaded — please refresh the page.", "error", 5000);
+    return;
+  }
 
-      if (chrome.runtime.lastError) {
-        console.error("MyPromptSucks message failed:", chrome.runtime.lastError);
-        showFloatingBadge(element, "Connection error: Please refresh the page.", "error", 4000);
-        return;
-      }
+  try {
+    chrome.runtime.sendMessage(
+      { action: "enhancePrompt", prompt: originalText },
+      (response) => {
+        // Safely cleanup loaders
+        element.classList.remove("myprompt-loading");
+        if (loadingBadge) loadingBadge.remove();
 
-      if (response && response.success) {
-        // Replace with the improved text
-        setPromptText(element, response.enhancedPrompt);
-        showFloatingBadge(element, "✨ Prompt improved!", "success", 2000);
-      } else {
-        // Handle explicit backend errors (e.g., missing API key, API limits)
-        const errorMsg = response?.error || "Failed to connect to Gemini API.";
-        showFloatingBadge(element, `Error: ${errorMsg}`, "error", 6000);
+        if (chrome.runtime.lastError) {
+          console.error("MyPromptSucks message failed:", chrome.runtime.lastError);
+          showFloatingBadge(element, "Connection error: Please refresh the page.", "error", 4000);
+          return;
+        }
+
+        if (response && response.success) {
+          // Replace with the improved text
+          setPromptText(element, response.enhancedPrompt);
+          showFloatingBadge(element, "✨ Prompt improved!", "success", 2000);
+        } else {
+          // Handle explicit backend errors (e.g., missing API key, API limits)
+          const errorMsg = response?.error || "Failed to connect to Gemini API.";
+          showFloatingBadge(element, `Error: ${errorMsg}`, "error", 6000);
+        }
       }
-    }
-  );
+    );
+  } catch (err) {
+    // Extension context was invalidated between the guard check and sendMessage
+    element.classList.remove("myprompt-loading");
+    if (loadingBadge) loadingBadge.remove();
+    showFloatingBadge(element, "Extension reloaded — please refresh the page.", "error", 5000);
+  }
 }
 
 /**

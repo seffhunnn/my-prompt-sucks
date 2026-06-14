@@ -22,8 +22,13 @@ jobs:
 
       - name: Package extension
         run: |
-          cd extension
-          zip -r "../my-prompt-sucks-${{ steps.version.outputs.VERSION }}.zip" . \
+          mkdir package
+
+          cp -r extension package/my-prompt-sucks
+
+          cd package
+
+          zip -r "../my-prompt-sucks-${{ steps.version.outputs.VERSION }}.zip" "my-prompt-sucks" \
             -x "*.DS_Store" \
             -x "__MACOSX/*"
 

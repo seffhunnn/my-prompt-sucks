@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="website/assets/icon-48.png" width="84" height="84" alt="My Prompt Sucks Logo" />
+  <img src="website/assets/logo.png" width="84" height="84" alt="My Prompt Sucks Logo" />
   <h1>My Prompt Sucks</h1>
   <p><em>Instantly optimize poorly structured AI prompts inline using the Gemini API and a single keyboard shortcut.</em></p>
 

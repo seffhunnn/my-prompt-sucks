@@ -1060,42 +1060,26 @@ Organize a 2-week development sprint for a team of 3 builders.
     });
   }
 
-  // ── Blob-based download (works cross-origin, forces actual file download) ─
+  // ── Native download — no fetch, no blob, no CORS ─────────────────────────
+  // GitHub release assets block cross-origin fetch requests.
+  // Setting window.location.href lets the browser download directly.
 
-  function forceDownload(url, filename) {
-    log("Starting blob download", { url, filename });
-    const a = document.createElement("a");
-    a.style.display = "none";
-    document.body.appendChild(a);
-
-    fetch(url)
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.blob(); })
-      .then(blob => {
-        const blobUrl = URL.createObjectURL(blob);
-        a.href     = blobUrl;
-        a.download = filename;
-        a.click();
-        log("Download triggered via blob", filename);
-        setTimeout(() => { URL.revokeObjectURL(blobUrl); a.remove(); }, 1000);
-      })
-      .catch(err => {
-        log("Blob download failed, falling back to navigation", err.message);
-        a.remove();
-        window.open(url, "_blank");
-      });
+  function nativeDownload(url) {
+    log("Triggering native download", url);
+    window.location.href = url;
   }
 
-  // ── Wire every .download-btn to force-download the ZIP ───────────────────
+  // ── Wire every .download-btn to natively download the ZIP ────────────────
 
   function attachDownloadListeners() {
     document.querySelectorAll(".download-btn").forEach(btn => {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
         if (resolvedZipUrl) {
-          forceDownload(resolvedZipUrl, resolvedName);
+          nativeDownload(resolvedZipUrl);
         } else {
           log("No resolved ZIP — opening release page as fallback");
-          window.open(FALLBACK, "_blank");
+          window.location.href = FALLBACK;
         }
       });
     });
@@ -1181,7 +1165,13 @@ Organize a 2-week development sprint for a team of 3 builders.
       log("RESOLVED — browser_download_url", resolvedZipUrl);
       log("RESOLVED — filename", resolvedName);
       log("RESOLVED — version", resolvedVersion);
-      
+
+      // Also stamp href directly on every download button so that
+      // right-click → Save Link As, middle-click, and ctrl+click all work
+      document.querySelectorAll(".download-btn").forEach(btn => {
+        btn.href = resolvedZipUrl;
+      });
+
       updateDynamicVersions(resolvedVersion);
 
       // Update UI

@@ -1,0 +1,6 @@
+# robots.txt for https://mypromptsucks.vercel.app/
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://mypromptsucks.vercel.app/sitemap.xml

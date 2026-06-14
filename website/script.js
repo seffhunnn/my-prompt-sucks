@@ -317,6 +317,10 @@ document.addEventListener("DOMContentLoaded", () => {
     particles.push(new Particle());
   }
 
+  // Burst particle pool — must be declared before animateParticles is called
+  const burstParticles = [];
+
+  // Single unified render loop — handles both background particles and burst pool
   function animateParticles() {
     ctx.clearRect(0, 0, width, height);
     
@@ -328,10 +332,96 @@ document.addEventListener("DOMContentLoaded", () => {
       particles[i].update();
       particles[i].draw();
     }
+
+    // Burst overlay — drawn on top, culled when life expires
+    for (let i = burstParticles.length - 1; i >= 0; i--) {
+      burstParticles[i].update();
+      burstParticles[i].draw();
+      if (burstParticles[i].life <= 0) burstParticles.splice(i, 1);
+    }
+
     requestAnimationFrame(animateParticles);
   }
   
   animateParticles();
+
+
+  // ── MOCKUP BUTTON BURST INTERACTION ────────────────────────────────────────
+
+  class BurstParticle {
+    constructor(x, y, hue, saturation, size, speed, angle) {
+      this.x    = x;
+      this.y    = y;
+      this.hue  = hue;
+      this.sat  = saturation;
+      this.size = size * (Math.random() * 0.8 + 0.6);
+      this.vx   = Math.cos(angle) * speed * (Math.random() * 0.6 + 0.7);
+      this.vy   = Math.sin(angle) * speed * (Math.random() * 0.6 + 0.7);
+      this.life = 1.0;
+      this.decay = Math.random() * 0.018 + 0.012;
+      this.gravity = 0.06;
+    }
+    update() {
+      this.x   += this.vx;
+      this.y   += this.vy;
+      this.vy  += this.gravity;
+      this.vx  *= 0.97;
+      this.life -= this.decay;
+    }
+    draw() {
+      if (this.life <= 0) return;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue}, ${this.sat}%, 65%, ${this.life * 0.9})`;
+      ctx.shadowColor = `hsla(${this.hue}, ${this.sat}%, 55%, ${this.life * 0.5})`;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  function spawnBurst(originEl, hue, saturation, count, speed) {
+    const rect = originEl.getBoundingClientRect();
+    const cx   = rect.left + rect.width  / 2;
+    const cy   = rect.top  + rect.height / 2;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 / count) * i + Math.random() * 0.3;
+      burstParticles.push(
+        new BurstParticle(cx, cy, hue, saturation,
+          Math.random() * 3 + 1.5, speed, angle)
+      );
+    }
+  }
+
+  // Wire up mockup buttons — remove disabled so they're clickable
+  const mockupBtns = document.querySelectorAll(".mockup-btn");
+  mockupBtns.forEach(btn => btn.removeAttribute("disabled"));
+
+  const saveBtn = document.querySelector(".mockup-btn.primary");
+  const testBtn = document.querySelector(".mockup-btn:not(.primary)");
+
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      // Golden yellow burst — 52 particles shooting outward
+      spawnBurst(saveBtn, 45, 95, 52, 7.5);
+      // Brief status ripple: flash the success alert
+      const alert = document.querySelector(".mockup-status-alert");
+      if (alert) {
+        alert.style.transition = "opacity 0.08s ease";
+        alert.style.opacity    = "0.3";
+        setTimeout(() => { alert.style.opacity = "1"; }, 100);
+      }
+    });
+  }
+
+  if (testBtn) {
+    testBtn.addEventListener("click", () => {
+      // Cool white ripple ring burst — 38 particles, wider spread
+      spawnBurst(testBtn, 200, 30, 38, 6.0);
+      // Second ring delayed — layered depth
+      setTimeout(() => spawnBurst(testBtn, 210, 20, 26, 4.5), 80);
+    });
+  }
 
 
   // 6. AUTOMATED PROMPT SHOWCASE CYCLE

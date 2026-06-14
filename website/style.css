@@ -694,7 +694,7 @@ strong {
 
 .mockup-btn-grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
   margin-bottom: 22px;
 }
@@ -707,13 +707,39 @@ strong {
   padding: 14px;
   font-size: 1.05rem;
   font-weight: 600;
-  cursor: not-allowed;
+  cursor: pointer;
   opacity: 0.85;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+              transform 0.1s ease, opacity 0.15s ease;
+  user-select: none;
+}
+
+.mockup-btn:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  opacity: 1;
+}
+
+.mockup-btn:active {
+  transform: scale(0.97) translateY(1px);
 }
 
 .mockup-btn.primary {
-  background-color: var(--surface-high);
-  color: var(--text-primary);
+  background-color: var(--accent-yellow);
+  color: #0B0B0C;
+  border-color: var(--accent-yellow);
+  border-bottom: 2px solid #C59828;
+  opacity: 1;
+}
+
+.mockup-btn.primary:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.mockup-btn.primary:active {
+  transform: scale(0.97) translateY(1px);
+  border-bottom-width: 1px;
 }
 
 .mockup-status-alert {

@@ -86,7 +86,7 @@ Deploy the extension locally in under 2 minutes:
 3. **Developer Mode**: Toggle **Developer mode** **ON** in the top-right corner.
 4. **Load Unpacked**: Click **Load unpacked** in the top-left and select the extracted `my-prompt-sucks/` folder.
 5. **Link API Key**:
-   - Get a free API connection key from **[Google AI Studio](https://aistudio.google.com/)**.
+   - Get a free API connection key from **[Google AI Studio](https://aistudio.google.com/apikey)**.
    - Click the extension icon in your Chrome toolbar, paste your key, and click **Save Connection**.
 
 ---

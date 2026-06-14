@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Remove js-loading class to initiate smooth GSAP reveal transitions
+  document.documentElement.classList.remove("js-loading");
 
   // 1. HIGHLIGHT USER OS ON KEYBOARD SHORTCUT GUIDE
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;

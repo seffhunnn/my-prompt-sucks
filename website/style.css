@@ -3936,4 +3936,18 @@ strong {
   }
 }
 
+/* ─── FOUC PREVENTION ────────────────────────────────────────────────────── */
+
+.js-loading .navbar,
+.js-loading .hero-badge,
+.js-loading .hero-title,
+.js-loading .hero-desc,
+.js-loading .hero-btns,
+.js-loading .shortcut-guide-strip,
+.js-loading .release-meta-strip,
+.js-loading .extension-mockup-wrapper {
+  opacity: 0;
+}
+
+
 

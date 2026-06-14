@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, "-=1");
 
   // Scroll reveals for section elements
-  gsap.utils.toArray(".step-card").forEach((card, i) => {
+  gsap.utils.toArray(".walkthrough-step").forEach((card, i) => {
     gsap.from(card, {
       scrollTrigger: {
         trigger: card,
@@ -184,16 +184,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  gsap.from(".feature-block-large", {
-    scrollTrigger: {
-      trigger: ".feature-block-large",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 50,
-    duration: 1,
-    ease: "power3.out"
-  });
+  const featureBlockLarge = document.querySelector(".feature-block-large");
+  if (featureBlockLarge) {
+    gsap.from(featureBlockLarge, {
+      scrollTrigger: {
+        trigger: featureBlockLarge,
+        start: "top 80%",
+      },
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: "power3.out"
+    });
+  }
 
   gsap.utils.toArray(".platform-card").forEach((card, i) => {
     gsap.from(card, {
@@ -210,16 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  gsap.from(".download-card-wrapper", {
-    scrollTrigger: {
-      trigger: ".download-card-wrapper",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 40,
-    duration: 0.9,
-    ease: "power3.out"
-  });
 
 
   // 5. LIVING ATMOSPHERIC CANVAS PARTICLE SYSTEM

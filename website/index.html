@@ -232,13 +232,15 @@
                 </div>
               </div>
               
-              <div class="mockup-form-group">
-                <label class="mockup-label">Gemini API Key</label>
-                <div class="mockup-input-wrapper">
-                  <input type="password" value="AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3" disabled class="mockup-input">
-                  <span class="mockup-input-badge">Configured</span>
+              <form role="presentation" autocomplete="off" onsubmit="return false" style="margin:0">
+                <div class="mockup-form-group">
+                  <label class="mockup-label">Gemini API Key</label>
+                  <div class="mockup-input-wrapper">
+                    <input type="password" value="AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3" disabled class="mockup-input" autocomplete="off">
+                    <span class="mockup-input-badge">Configured</span>
+                  </div>
                 </div>
-              </div>
+              </form>
 
               <div class="mockup-btn-grid">
                 <button class="mockup-btn primary" disabled>Save Key</button>
@@ -568,10 +570,12 @@
                     <strong>My Prompt Sucks</strong>
                   </div>
                   <div class="popup-body-mock">
-                    <div class="mock-input-group">
-                      <span class="mock-label">Gemini API Key</span>
-                      <input type="password" value="•••••••••••••••••••••••••" disabled class="mock-key-field">
-                    </div>
+                    <form role="presentation" autocomplete="off" onsubmit="return false" style="margin:0">
+                      <div class="mock-input-group">
+                        <span class="mock-label">Gemini API Key</span>
+                        <input type="password" value="•••••••••••••••••••••••••" disabled class="mock-key-field" autocomplete="off">
+                      </div>
+                    </form>
                     <div class="mock-save-btn-active">
                       <span>Save Connection</span>
                       <div class="save-spark"></div>

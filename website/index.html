@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Prompt Sucks</title>
+  <meta name="description" content="A premium, lightweight Chrome extension that intercepts and refactors your poorly written AI prompts inline using the Gemini API and a simple keyboard shortcut.">
+  <link rel="icon" type="image/png" href="assets/icon-16.png">
+  
+  <!-- SEO Meta Tags -->
+  <meta property="og:title" content="My Prompt Sucks — Premium AI Prompt Enhancer Extension">
+  <meta property="og:description" content="Improve your AI prompts inline instantly on ChatGPT, Claude, Gemini, and Perplexity using a keyboard shortcut.">
+  <meta property="og:image" content="assets/logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- GSAP & Lenis CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+</head>
+<body>
+
+  <!-- Particle System Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo-link">
+        <img src="assets/icon-48.png" alt="My Prompt Sucks Logo" class="nav-logo">
+        <span class="nav-title">My Prompt Sucks</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#playground">Playground</a>
+        <a href="#first-time-setup">Setup Guide</a>
+        <a href="#setup">Quick Setup</a>
+        <a href="#features">Features</a>
+        <a href="#platforms">Platforms</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/seffhunnn/my-prompt-sucks" target="_blank" rel="noopener noreferrer" class="github-icon-btn" title="GitHub Repository">
+          <svg class="icon-svg" viewBox="0 0 24 24" width="20" height="20">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+        </a>
+        <a href="#setup" class="cta-btn primary-btn">Install Extension</a>
+      </div>
+      <button class="mobile-menu-toggle" aria-label="Toggle Navigation">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer">
+    <nav class="mobile-nav-links">
+      <a href="#playground">Playground</a>
+      <a href="#first-time-setup">Setup Guide</a>
+      <a href="#setup">Quick Setup</a>
+      <a href="#features">Features</a>
+      <a href="#platforms">Platforms</a>
+      <a href="https://github.com/seffhunnn/my-prompt-sucks" target="_blank" rel="noopener noreferrer" class="drawer-github-link">
+        <svg class="icon-svg" viewBox="0 0 24 24" width="16" height="16">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        GitHub Project
+      </a>
+    </nav>
+  </div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-container">
+        
+        <!-- Left Hero Content -->
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="pulse-dot"></span>
+            <span>Manifest V3 Prompt Assistant</span>
+          </div>
+          <h1 class="hero-title">
+            Your AI prompts <span class="highlight-line">suck.</span><br>
+            <span class="accent-text">Fix them instantly.</span>
+          </h1>
+          <p class="hero-desc">
+            Stop writing lazy one-liners like <em>"write a login code"</em>. <strong>My Prompt Sucks</strong> intercepts your draft prompt inline, optimizes it structurally via Gemini, and replaces it in your active textbox. Instantly.
+          </p>
+          
+          <div class="hero-btns">
+            <a href="#first-time-setup" id="hero-install-btn" class="cta-btn primary-btn size-large">Install Free</a>
+            <a href="#playground" class="cta-btn outline-btn size-large">Showcase</a>
+          </div>
+
+          <!-- Release metadata strip under hero CTAs -->
+          <div class="release-meta-strip" id="hero-release-meta">
+            <span class="release-meta-dot"></span>
+            <span class="release-meta-tag" id="hero-meta-version">Fetching release…</span>
+            <span class="release-meta-sep">·</span>
+            <span class="release-meta-item" id="hero-meta-date"></span>
+            <span class="release-meta-sep" id="hero-meta-size-sep"></span>
+            <span class="release-meta-item" id="hero-meta-size"></span>
+          </div>
+
+          <!-- Keyboard Shortcut Guide (Command Strip) -->
+          <div class="shortcut-guide-strip">
+            <div class="shortcut-platform-box" id="winShortcutBox">
+              <span class="platform-label">Windows / Linux</span>
+              <div class="tactile-keys" id="winKeys">
+                <kbd class="tactile-key" data-key="ctrl">Ctrl</kbd>
+                <span class="key-plus">+</span>
+                <kbd class="tactile-key" data-key="shift">Shift</kbd>
+                <span class="key-plus">+</span>
+                <kbd class="tactile-key highlight" data-key="e">E</kbd>
+              </div>
+            </div>
+            
+            <div class="shortcut-divider"></div>
+            
+            <div class="shortcut-platform-box" id="macShortcutBox">
+              <span class="platform-label">macOS</span>
+              <div class="tactile-keys" id="macKeys">
+                <kbd class="tactile-key" data-key="cmd">Cmd</kbd>
+                <span class="key-plus">+</span>
+                <kbd class="tactile-key" data-key="shift">Shift</kbd>
+                <span class="key-plus">+</span>
+                <kbd class="tactile-key highlight" data-key="e">E</kbd>
+              </div>
+            </div>
+            
+            <div class="shortcut-divider"></div>
+            
+            <div class="shortcut-info-box">
+              <span class="info-pulse-dot"></span>
+              <span class="info-text">Trigger inline prompt optimization directly inside supported AI text fields.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Mockup (Sleek CSS Extension Popup Mockup) -->
+        <div class="hero-visual">
+          <div class="extension-mockup-wrapper">
+            <div class="mockup-header">
+              <div class="mockup-dots">
+                <span class="mockup-dot red"></span>
+                <span class="mockup-dot yellow"></span>
+                <span class="mockup-dot green"></span>
+              </div>
+              <div class="mockup-url">my-prompt-sucks-extension</div>
+            </div>
+            
+            <div class="mockup-body">
+              <div class="mockup-extension-header">
+                <img src="assets/icon-48.png" alt="Smiley Logo" class="mockup-logo">
+                <div>
+                  <h3 class="mockup-title">My <span class="mockup-accent">Prompt</span> Sucks</h3>
+                  <span class="mockup-status">Fix terrible prompts instantly.</span>
+                </div>
+              </div>
+              
+              <div class="mockup-form-group">
+                <label class="mockup-label">Gemini API Key</label>
+                <div class="mockup-input-wrapper">
+                  <input type="password" value="AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3" disabled class="mockup-input">
+                  <span class="mockup-input-badge">Configured</span>
+                </div>
+              </div>
+
+              <div class="mockup-btn-grid">
+                <button class="mockup-btn primary" disabled>Test Connection</button>
+                <button class="mockup-btn" disabled>Save Key</button>
+              </div>
+
+              <div class="mockup-status-alert">
+                Connection successful! Gemini API is responsive.
+              </div>
+
+              <div class="mockup-sponsor-box">
+                <span class="sponsor-text">Built with caffeine & bad prompts ☕</span>
+                <a href="https://github.com/sponsors/seffhunnn" target="_blank" rel="noopener noreferrer" class="mockup-sponsor-btn">
+                  <svg class="heart-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                  Sponsor
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Live Refactoring Showcase Section -->
+    <section id="playground" class="playground-section">
+      <div class="container">
+        <div class="section-header align-center">
+          <span class="section-tag">Live Showcase</span>
+          <h2 class="section-title">See the Refactoring in Action</h2>
+          <p class="section-desc">
+            Watch how My Prompt Sucks instantly takes raw draft prompts and restructures them into professional, high-performance instructions inline.
+          </p>
+        </div>
+
+        <!-- Showcase Pipeline Wrapper -->
+        <div class="showcase-pipeline">
+          
+          <!-- Category Indicator Tabs at the top -->
+          <div class="category-tabs">
+            <span class="category-tab active" data-index="0">Coding</span>
+            <span class="category-tab" data-index="1">Writing</span>
+            <span class="category-tab" data-index="2">Marketing</span>
+            <span class="category-tab" data-index="3">Research</span>
+            <span class="category-tab" data-index="4">UI/UX</span>
+            <span class="category-tab" data-index="5">Productivity</span>
+          </div>
+
+          <div class="showcase-grid">
+            
+            <!-- Left Card: Original Prompt -->
+            <div class="showcase-card left-panel">
+              <div class="card-header">
+                <div class="mockup-dots">
+                  <span class="mockup-dot red"></span>
+                  <span class="mockup-dot yellow"></span>
+                  <span class="mockup-dot green"></span>
+                </div>
+                <span class="card-title-text">Original Prompt</span>
+                <span class="badge-tag red-tag">Before</span>
+              </div>
+              <div class="card-body">
+                <div class="prompt-text-container">
+                  <span id="badPromptText" class="prompt-typing"></span><span class="typing-cursor">|</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle Connector Beam -->
+            <div class="showcase-connector">
+              <div class="beam-glow-line"></div>
+              <div class="beam-processor">
+                <div class="beam-pulse"></div>
+                <svg class="processor-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span id="beamStatus" class="beam-status-text">Idle</span>
+              </div>
+              <div class="beam-glow-line"></div>
+            </div>
+
+            <!-- Right Card: Optimized Prompt -->
+            <div class="showcase-card right-panel">
+              <div class="card-header">
+                <div class="mockup-dots">
+                  <span class="mockup-dot red"></span>
+                  <span class="mockup-dot yellow"></span>
+                  <span class="mockup-dot green"></span>
+                </div>
+                <span class="card-title-text">Optimized Prompt</span>
+                <span class="badge-tag yellow-tag">Enhanced by Gemini</span>
+              </div>
+              <div class="card-body">
+                <div class="enhanced-code-container">
+                  <pre class="code-pre"><code id="goodPromptText" class="language-markdown"></code></pre>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom CTA area of showcase -->
+          <div class="showcase-footer">
+            <p class="showcase-footer-text">Experience real-time prompt optimization directly inside your favorite AI platforms.</p>
+            <div class="showcase-btns">
+              <a href="#first-time-setup" class="cta-btn primary-btn size-large">Install Extension</a>
+              <a href="https://github.com/seffhunnn/my-prompt-sucks" target="_blank" rel="noopener noreferrer" class="cta-btn outline-btn size-large">View GitHub</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Cinematic First Time Setup Section -->
+    <section id="first-time-setup" class="walkthrough-section">
+      <div class="container">
+        
+        <div class="section-header align-center">
+          <span class="section-tag">Step-by-Step Walkthrough</span>
+          <h2 class="section-title">First Time Setup Guide</h2>
+          <p class="section-desc">
+            New to unpacked extensions or API keys? This fully-visual guide walks you through every single step from download to first prompt refactor.
+          </p>
+        </div>
+
+        <div class="walkthrough-flow">
+          
+          <!-- Step 1: Download -->
+          <div class="walkthrough-step step-left">
+            <div class="walkthrough-content">
+              <div class="step-badge-num">01</div>
+              <h3 class="walkthrough-title">Download the Extension</h3>
+              <p class="walkthrough-desc">
+                Download the latest release directly from GitHub. The ZIP contains only the extension files — clean, minimal, ready to load.
+              </p>
+              <div class="walkthrough-actions">
+                <a href="https://github.com/seffhunnn/my-prompt-sucks/releases/latest" id="walkthrough-download-btn" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn highlight-yellow is-loading">
+                  <svg class="setup-btn-icon btn-dl-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                  <span class="btn-label">Fetching release…</span>
+                  <span class="btn-loader" aria-hidden="true"></span>
+                </a>
+                <a href="https://github.com/seffhunnn/my-prompt-sucks/releases" target="_blank" rel="noopener noreferrer" class="setup-btn outline-setup-btn">
+                  <span>All Releases</span>
+                </a>
+              </div>
+
+              <!-- Release metadata under walkthrough download -->
+              <div class="release-meta-strip walkthrough-meta" id="walkthrough-release-meta">
+                <span class="release-meta-dot"></span>
+                <span class="release-meta-tag" id="wt-meta-version">Latest Release</span>
+                <span class="release-meta-sep">·</span>
+                <span class="release-meta-item" id="wt-meta-date"></span>
+                <span class="release-meta-sep" id="wt-meta-size-sep"></span>
+                <span class="release-meta-item" id="wt-meta-size"></span>
+              </div>
+
+              <div class="walkthrough-note">
+                <strong>Clean install:</strong> Extension-only package — no website code, no repo clutter. Extract and load.
+              </div>
+            </div>
+            
+            <div class="walkthrough-visual">
+              <div class="visual-wrapper zip-flow-visual">
+                <div class="zip-box">
+                  <span class="file-icon">📦</span>
+                  <span class="file-label">my-prompt-sucks-v*.zip</span>
+                </div>
+                <div class="flow-arrow">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+                <div class="folder-box">
+                  <span class="file-icon">📁</span>
+                  <span class="file-label">extension/</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Developer Mode -->
+          <div class="walkthrough-step step-right">
+            <div class="walkthrough-visual">
+              <div class="visual-wrapper extensions-page-mockup">
+                <div class="browser-window">
+                  <div class="browser-header">
+                    <div class="browser-dots">
+                      <span></span><span></span><span></span>
+                    </div>
+                    <div class="browser-address">chrome://extensions</div>
+                  </div>
+                  <div class="browser-content">
+                    <div class="mock-sidebar">
+                      <div class="sidebar-item active">Extensions</div>
+                      <div class="sidebar-item">Keyboard shortcuts</div>
+                    </div>
+                    <div class="mock-main">
+                      <div class="dev-mode-bar">
+                        <span>Developer mode</span>
+                        <div class="mock-toggle active">
+                          <span class="toggle-switch"></span>
+                        </div>
+                      </div>
+                      <div class="extensions-mock-card">
+                        <div class="card-logo">📁</div>
+                        <div class="card-text">
+                          <strong>My Prompt Sucks</strong>
+                          <span>Version 1.0.0</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="walkthrough-content">
+              <div class="step-badge-num">02</div>
+              <h3 class="walkthrough-title">Enable Developer Mode</h3>
+              <p class="walkthrough-desc">
+                Open Google Chrome, type <code>chrome://extensions</code> in your URL bar, and press Enter. Locate the **Developer mode** toggle in the top-right corner and turn it **ON**.
+              </p>
+              <div class="walkthrough-note">
+                <strong>Helpful Note:</strong> Enabling Developer Mode is standard and completely safe. It allows Chrome to run extensions directly from local folders on your machine.
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Load Unpacked -->
+          <div class="walkthrough-step step-left">
+            <div class="walkthrough-content">
+              <div class="step-badge-num">03</div>
+              <h3 class="walkthrough-title">Load the Extension</h3>
+              <p class="walkthrough-desc">
+                With Developer Mode enabled, click the **Load unpacked** button in the top-left corner of the extensions page. In the file explorer, select the extracted <code>my-prompt-sucks</code> folder.
+              </p>
+              <div class="walkthrough-note">
+                <strong>Helpful Note:</strong> The extension will instantly load, and its icon will appear in your browser's extension list (click the puzzle icon to pin it!).
+              </div>
+            </div>
+            
+            <div class="walkthrough-visual">
+              <div class="visual-wrapper load-unpacked-visual">
+                <div class="load-unpacked-btn-mock">
+                  <span>📂 Load unpacked</span>
+                  <div class="click-pulse"></div>
+                </div>
+                <div class="picker-line"></div>
+                <div class="extension-loaded-badge">
+                  <img src="assets/icon-48.png" class="loaded-badge-logo" alt="Extension loaded badge">
+                  <div class="badge-texts">
+                    <strong>My Prompt Sucks</strong>
+                    <span class="success-indicator">✓ Loaded Unpacked</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Get Gemini Key -->
+          <div class="walkthrough-step step-right">
+            <div class="walkthrough-visual">
+              <div class="visual-wrapper ai-studio-mockup">
+                <div class="studio-header">
+                  <span class="studio-brand">Google AI Studio</span>
+                </div>
+                <div class="studio-body">
+                  <div class="studio-create-key-btn">
+                    <span>Create API key</span>
+                  </div>
+                  <div class="studio-key-table">
+                    <div class="key-row">
+                      <span class="key-name">my-key-01</span>
+                      <code class="key-val-redacted">AIzaSyB3...4E5F</code>
+                      <span class="key-status">Active</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="walkthrough-content">
+              <div class="step-badge-num">04</div>
+              <h3 class="walkthrough-title">Get Free Gemini API Key</h3>
+              <p class="walkthrough-desc">
+                Visit Google AI Studio to generate a free Gemini API key. The extension uses your key to communicate directly with Google's prompt models.
+              </p>
+              <div class="walkthrough-actions">
+                <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn highlight-yellow">
+                  <span>Get Gemini API Key</span>
+                  <svg class="arrow-icon" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </a>
+              </div>
+              <div class="walkthrough-note">
+                <strong>Privacy Promise:</strong> Your API key is stored 100% locally in your Chrome storage. We run zero intermediary servers and track no prompts.
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5: Paste and Save Key -->
+          <div class="walkthrough-step step-left">
+            <div class="walkthrough-content">
+              <div class="step-badge-num">05</div>
+              <h3 class="walkthrough-title">Paste & Save Your Key</h3>
+              <p class="walkthrough-desc">
+                Click the extension icon in your Chrome toolbar. Paste your Gemini API key into the input field and click **Save Key**.
+              </p>
+              <div class="walkthrough-note">
+                <strong>Helpful Note:</strong> Once the key is configured, you will see a "Connection successful!" alert. The extension is now active.
+              </div>
+            </div>
+            
+            <div class="walkthrough-visual">
+              <div class="visual-wrapper save-key-visual">
+                <div class="extension-popup-frame">
+                  <div class="popup-top">
+                    <img src="assets/icon-48.png" class="popup-logo" alt="My Prompt Sucks Logo">
+                    <strong>My Prompt Sucks</strong>
+                  </div>
+                  <div class="popup-body-mock">
+                    <div class="mock-input-group">
+                      <span class="mock-label">Gemini API Key</span>
+                      <input type="password" value="•••••••••••••••••••••••••" disabled class="mock-key-field">
+                    </div>
+                    <div class="mock-save-btn-active">
+                      <span>Save Connection</span>
+                      <div class="save-spark"></div>
+                    </div>
+                    <div class="mock-toast-alert">✓ Key Saved Successfully!</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 6: Use Shortcut Anywhere -->
+          <div class="walkthrough-step step-right">
+            <div class="walkthrough-visual">
+              <div class="visual-wrapper shortcut-exec-visual">
+                <div class="keycap-display">
+                  <kbd class="keycap-btn">Ctrl</kbd>
+                  <span>+</span>
+                  <kbd class="keycap-btn">Shift</kbd>
+                  <span>+</span>
+                  <kbd class="keycap-btn highlight">E</kbd>
+                </div>
+                <div class="refactor-bubble-preview">
+                  <div class="bubble-draft strike-draft">make login page</div>
+                  <div class="bubble-result-preview">
+                    <strong># Role: B2B Frontend Expert</strong><br>
+                    - Responsive CSS variables...
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="walkthrough-content">
+              <div class="step-badge-num">06</div>
+              <h3 class="walkthrough-title">Optimize Prompts Inline</h3>
+              <p class="walkthrough-desc">
+                Open ChatGPT, Claude, Gemini, or Perplexity. Type a rough draft query, then press the shortcut (or <code>⌘ + Shift + E</code> on Mac) to instantly enhance it in the textbox.
+              </p>
+              <div class="walkthrough-note">
+                <strong>Compatible Hosts:</strong> Works seamlessly across ChatGPT, Anthropic Claude, Google Gemini, and Perplexity AI.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Quick Setup / Onboarding Section -->
+    <section id="setup" class="setup-section">
+      <div class="container">
+        <div class="section-header align-center">
+          <span class="section-tag">Seamless Deployment</span>
+          <h2 class="section-title">Get Started in Under 2 Minutes</h2>
+          <p class="section-desc">
+            No intermediate servers, no tracking, no subscription friction. Follow this simple 4-step guide to unlock instant prompt optimization.
+          </p>
+        </div>
+
+        <div class="setup-steps-flow">
+          
+          <!-- Step 1: Install Extension -->
+          <div class="setup-card step-1-card">
+            <div class="setup-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="setup-step-num">01</div>
+            
+            <h3 class="setup-step-title">Install the Extension</h3>
+            <p class="setup-step-desc">
+              Download the latest release ZIP — it contains only the extension files. Extract it, then load it directly into Chrome in seconds.
+            </p>
+
+            <!-- Visual Mockup: Chrome Icon Badge & Flow -->
+            <div class="setup-visual-wrapper chrome-install-visual">
+              <div class="mini-chrome-badge">
+                <svg class="chrome-svg-icon" viewBox="0 0 24 24" width="30" height="30">
+                  <path fill="#4285F4" d="M12 0C7.73 0 4.1 2.2 2 5.5l4.3 7.4c.5-1.9 2.2-3.4 4.3-3.5h9.7C19.3 3.9 16 0 12 0z"/>
+                  <path fill="#EA4335" d="M6.3 12.9l-4.3-7.4C.7 7.7 0 9.8 0 12c0 5.4 3.6 10 8.6 11.4l4.3-7.5c-1.9-.3-3.6-1.7-4.3-3.5-1-.9-1.9-1.9-2.3-2.5z"/>
+                  <path fill="#FBBC05" d="M17.3 11c-.7 1.9-2.4 3.2-4.3 3.5l-4.3 7.5c1.1.3 2.2.5 3.3.5 6.6 0 12-5.4 12-12 0-1.8-.4-3.5-1.1-5H12.9c1.9 1.1 3.5 2.8 4.4 5z"/>
+                  <path fill="#FFFFFF" d="M12 16c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4z"/>
+                  <path fill="#4285F4" d="M12 15c1.65 0 3-1.35 3-3s-1.35-3-3-3-3 1.35-3 3 1.35 3 3 3z"/>
+                </svg>
+                <span class="badge-label">Chrome Extension</span>
+              </div>
+              <div class="install-arrow-flow">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+              <div class="mini-extension-box">
+                <img src="assets/icon-48.png" alt="Extension Logo" class="mini-ext-logo">
+              </div>
+            </div>
+
+            <div class="setup-card-actions">
+              <a href="https://github.com/seffhunnn/my-prompt-sucks/releases/latest" id="setup-download-btn" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn is-loading">
+                <svg class="setup-btn-icon btn-dl-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span class="btn-label">Fetching release…</span>
+                <span class="btn-loader" aria-hidden="true"></span>
+              </a>
+              <a href="https://github.com/seffhunnn/my-prompt-sucks/releases" target="_blank" rel="noopener noreferrer" class="setup-btn outline-setup-btn">
+                <span>All Releases</span>
+              </a>
+            </div>
+
+            <!-- Trust + size pill -->
+            <div class="release-trust-pill" id="setup-trust-pill">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="setup-trust-text">Extension-only package · no website files</span>
+            </div>
+
+            <!-- Sleek Expandable Help Toggle -->
+            <div class="help-expander">
+              <button class="help-expander-trigger">
+                <span>How do I load an unpacked extension?</span>
+                <svg class="help-chevron" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="help-expander-content">
+                <p>Extract the downloaded ZIP, then open <code>chrome://extensions/</code>, enable <strong>Developer Mode</strong> (top-right toggle), click <strong>Load Unpacked</strong>, and select the extracted folder. Done.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Get Gemini API Key -->
+          <div class="setup-card step-2-card">
+            <div class="setup-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="setup-step-num">02</div>
+            
+            <h3 class="setup-step-title">Get Gemini API Key</h3>
+            <p class="setup-step-desc">
+              Get a free API key from Google AI Studio. Your prompts are optimized directly from your browser.
+            </p>
+
+            <!-- Visual Mockup: Key Input Field -->
+            <div class="setup-visual-wrapper key-mockup-visual">
+              <div class="mini-key-input">
+                <span class="key-dot-label">Gemini API Key</span>
+                <div class="key-field-mock">
+                  <span class="key-dots">•••• •••• •••• •••• 5F6G</span>
+                  <svg class="lock-svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="setup-card-actions">
+              <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="setup-btn primary-setup-btn highlight-yellow">
+                <span>Get API Key</span>
+                <svg class="arrow-icon" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </a>
+            </div>
+
+            <div class="setup-trust-indicators">
+              <span class="trust-pill"><span class="green-dot"></span>Stored Locally</span>
+              <span class="trust-pill">No Tracking</span>
+            </div>
+
+            <!-- Sleek Expandable Help Toggle -->
+            <div class="help-expander">
+              <button class="help-expander-trigger">
+                <span>Is the API key free?</span>
+                <svg class="help-chevron" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="help-expander-content">
+                <p>Yes! Google AI Studio provides a free tier with generous rate limits, perfect for personal, zero-cost prompt optimization.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Add Your API Key -->
+          <div class="setup-card step-3-card">
+            <div class="setup-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="setup-step-num">03</div>
+            
+            <h3 class="setup-step-title">Paste Your Key</h3>
+            <p class="setup-step-desc">
+              Open the extension popup, paste your Gemini API key, and click Save Key to store it locally.
+            </p>
+
+            <!-- Visual Mockup: Popup UI Mini-Mockup -->
+            <div class="setup-visual-wrapper popup-mockup-visual">
+              <div class="mini-popup-mock">
+                <div class="popup-title-bar">
+                  <img src="assets/icon-16.png" class="popup-logo-img" alt="My Prompt Sucks Logo">
+                  <span>My Prompt Sucks</span>
+                </div>
+                <div class="popup-input-field">
+                  <div class="field-label">API Key</div>
+                  <div class="input-glow-mock">•••••••••••••••••</div>
+                </div>
+                <div class="popup-btn-mock">
+                  <span>Save Connection</span>
+                  <div class="pulse-glow-circle"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sleek Expandable Help Toggle -->
+            <div class="help-expander">
+              <button class="help-expander-trigger">
+                <span>Does this track my prompts?</span>
+                <svg class="help-chevron" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="help-expander-content">
+                <p>Never. Your prompts are dispatched directly from your browser to the Google Gemini API. There is no intermediate database or analytical tracker.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Start Optimizing -->
+          <div class="setup-card step-4-card">
+            <div class="setup-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="setup-step-num">04</div>
+            
+            <h3 class="setup-step-title">Press Shortcut</h3>
+            <p class="setup-step-desc">
+              Type naturally in any input box, hit the keyboard shortcut, and watch it enhance.
+            </p>
+
+            <!-- Visual Mockup: Keycaps and platform icons -->
+            <div class="setup-visual-wrapper keys-mockup-visual">
+              <div class="visual-keycaps-row">
+                <kbd class="mini-key">Ctrl</kbd>
+                <span class="key-joiner">+</span>
+                <kbd class="mini-key">Shift</kbd>
+                <span class="key-joiner">+</span>
+                <kbd class="mini-key highlight">E</kbd>
+              </div>
+              <div class="visual-platforms-strip">
+                <span class="mini-platform-label">ChatGPT</span>
+                <span class="mini-platform-label">Claude</span>
+                <span class="mini-platform-label">Gemini</span>
+                <span class="mini-platform-label">Perplexity</span>
+              </div>
+            </div>
+
+            <div class="setup-shortcut-details">
+              <div class="setup-shortcut-os">
+                <span>Win/Linux:</span>
+                <code>Ctrl+Shift+E</code>
+              </div>
+              <div class="setup-shortcut-os">
+                <span>macOS:</span>
+                <code>⌘+Shift+E</code>
+              </div>
+            </div>
+
+            <!-- Sleek Expandable Help Toggle -->
+            <div class="help-expander">
+              <button class="help-expander-trigger">
+                <span>How does activation work?</span>
+                <svg class="help-chevron" viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="help-expander-content">
+                <p>When you trigger the shortcut in a chat text area, the extension reads your draft, sends it to Gemini, formats it, and inserts it back into the textbox.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="container">
+        <div class="section-header align-center">
+          <span class="section-tag">Handcrafted Architecture</span>
+          <h2 class="section-title">A Developer-First Extension</h2>
+          <p class="section-desc">
+            Built for developers who value keyboard navigation, speed, and privacy. Zero tracking. Zero bloated libraries.
+          </p>
+        </div>
+
+        <div class="features-layout">
+          <!-- Main Feature Card -->
+          <div class="feature-block-large">
+            <div class="feature-content">
+              <span class="feature-badge">Privacy First</span>
+              <h3 class="feature-block-title">Your API Key. Your Storage.</h3>
+              <p class="feature-block-desc">
+                Your Gemini API key is stored safely within Chrome's local storage (`chrome.storage.local`). We do not host intermediate servers. Your prompts are dispatched directly from your browser to the Google Gemini endpoint.
+              </p>
+              <ul class="feature-list">
+                <li>
+                  <svg viewBox="0 0 24 24" width="16" height="16" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                  No external analytics or click tracking
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" width="16" height="16" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                  Zero database dependencies or user logs
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" width="16" height="16" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                  Source-visible transparency on GitHub
+                </li>
+              </ul>
+            </div>
+            <div class="feature-visual-panel">
+              <div class="terminal-mockup">
+                <div class="terminal-header">
+                  <span class="terminal-dot"></span>
+                  <span class="terminal-dot"></span>
+                  <span class="terminal-dot"></span>
+                </div>
+                <div class="terminal-code">
+                  <p><span class="col-pink">const</span> key = <span class="col-blue">await</span> chrome.storage.local.get(<span class="col-green">'geminiApiKey'</span>);</p>
+                  <p><span class="col-pink">if</span> (!key) <span class="col-pink">throw new</span> <span class="col-yellow">Error</span>(<span class="col-green">'Configure API key first'</span>);</p>
+                  <p class="comment">// API call executed directly from local background worker</p>
+                  <p><span class="col-pink">const</span> res = <span class="col-blue">await</span> fetch(geminiEndpoint, { ... });</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Grid -->
+          <div class="features-grid-small">
+            
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="20" height="20" class="feature-icon"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <h4 class="feature-title">Ultra Lightweight</h4>
+              <p class="feature-desc">Written in raw vanilla JavaScript without bulky framework bindings. Instant execution and minimal memory footprints.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="20" height="20" class="feature-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <h4 class="feature-title">Strict Scoping</h4>
+              <p class="feature-desc">Permissions are strictly limited to the four target AI hosts. The extension remains fully inert on all other pages.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon-wrapper">
+                <svg viewBox="0 0 24 24" width="20" height="20" class="feature-icon"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              </div>
+              <h4 class="feature-title">Smart Text Replacements</h4>
+              <p class="feature-desc">Safely updates inputs by targeting DOM properties directly without breaking complex React or Svelte virtual DOM states.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platforms Section -->
+    <section id="platforms" class="platforms-section">
+      <div class="container">
+        <div class="section-header align-center">
+          <span class="section-tag">Supported Hosts</span>
+          <h2 class="section-title">Works Where You Already Prompt</h2>
+          <p class="section-desc">
+            This extension intelligently enhances prompts directly inside supported AI chat interfaces.
+          </p>
+        </div>
+
+        <!-- Animated Connector Graphic -->
+        <div class="platforms-connector">
+          <div class="connector-line"></div>
+          <div class="connector-node" title="My Prompt Sucks Core">
+            <img src="assets/icon-48.png" alt="Extension Node">
+          </div>
+          <div class="connector-line"></div>
+        </div>
+
+        <div class="platform-grid">
+          
+          <!-- ChatGPT -->
+          <a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer" class="platform-card chatgpt-card">
+            <div class="platform-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="platform-logo-wrapper chatgpt-logo-bg">
+              <svg class="platform-svg" viewBox="0 0 24 24">
+                <path d="M21.74 11.85c-.18-.58-.52-1.1-.96-1.5-.18-.16-.38-.3-.59-.42.04-.37.04-.75-.02-1.12-.08-.57-.3-1.1-.64-1.57a4.9 4.9 0 00-1.74-1.63c-.34-.19-.71-.32-1.09-.4.07-.37.06-.75-.01-1.12-.11-.56-.35-1.09-.72-1.53a4.9 4.9 0 00-2.07-1.42 5 5 0 00-3.32-.08 4.9 4.9 0 00-1.89 1.1c-.26.23-.48.5-.66.8-.26-.14-.54-.25-.83-.32a4.9 4.9 0 00-4.04.99 4.9 4.9 0 00-1.92 3.12 5 5 0 00.32 2.76c-.22.12-.42.27-.6.44A4.9 4.9 0 00.6 13.62c.11.56.35 1.09.72 1.53a4.9 4.9 0 002.07 1.42c.38.15.79.22 1.2.22.42 0 .84-.08 1.23-.23.18.16.38.3.59.42-.04.37-.04.75.02 1.12.08.57.3 1.1.64 1.57a4.9 4.9 0 001.74 1.63c.34.19.71.32 1.09.4-.07.37-.06.75.01 1.12.11.56.35 1.09.72 1.53a4.9 4.9 0 002.07 1.42 5 5 0 003.32.08 4.9 4.9 0 001.89-1.1c.26-.23.48-.5.66-.8.26.14.54.25.83.32a4.9 4.9 0 004.04-.99 4.9 4.9 0 001.92-3.12 5 5 0 00-.32-2.76c.22-.12.42-.27.6-.44a4.9 4.9 0 001.32-2.5 4.9 4.9 0 00-.28-3.03zm-1.86 1.76a3.4 3.4 0 01-1.35 1.34c-.17.09-.27.27-.24.46.06.31.06.63.01.94-.06.38-.2.74-.43 1.05a3.42 3.42 0 01-2.26 1.39c-.3.04-.61.02-.91-.06-.18-.04-.37.02-.5.15a3.4 3.4 0 01-1.6 1.04c-.37.1-.76.12-1.14.07a3.4 3.4 0 01-2.12-1.15c-.23-.25-.39-.56-.47-.9-.05-.18-.21-.3-.4-.28a3.42 3.42 0 01-1.83.2c-.38-.06-.75-.22-1.06-.46a3.4 3.4 0 01-1.2-2.1c-.04-.3-.02-.61.06-.91.05-.18-.01-.37-.15-.5a3.4 3.4 0 01-1.04-1.6 3.4 3.4 0 01-.07-1.14 3.4 3.4 0 011.15-2.12c.25-.23.56-.39.9-.47.18-.05.3-.21.28-.4a3.42 3.42 0 01-.2-1.83c.06-.38.22-.75.46-1.06a3.4 3.4 0 012.1-1.2c.3-.04.61-.02.91.06.18.04.37-.02.5-.15a3.4 3.4 0 011.6-1.04c.37-.1.76-.12 1.14-.07a3.4 3.4 0 012.12 1.15c.23.25.39.56.47.9.05.18.21.3.4.28a3.42 3.42 0 011.83-.2c.38.06.75.22 1.06.46a3.4 3.4 0 011.2 2.1c.04.3.02.61-.06.91-.05.18.01.37.15.5a3.4 3.4 0 011.04 1.6 3.4 3.4 0 01.07 1.14 3.4 3.4 0 01-1.15 2.12c-.25.23-.56.39-.9.47-.18.05-.3.21-.28.4a3.42 3.42 0 01.2 1.83c-.06.38-.22.75-.46 1.06zm-7.88-5.32c-.52 0-.94-.42-.94-.94V5.72a.94.94 0 011.88 0v1.63c0 .52-.42.94-.94.94zm0 6.56c-.52 0-.94-.42-.94-.94v-1.63c0-.52.42-.94.94-.94s.94.42.94.94v1.63c0 .52-.42.94-.94.94zm4.27-2.46c-.26-.45-.11-1.03.34-1.29l1.41-.81c.45-.26 1.03-.11 1.29.34s.11 1.03-.34 1.29l-1.41.81a.95.95 0 01-1.29-.34zm-7.13-4.12c-.26-.45-.11-1.03.34-1.29l1.41-.81c.45-.26 1.03-.11 1.29.34s.11 1.03-.34 1.29l-1.41.81a.95.95 0 01-1.29-.34zm7.13 1.66c-.45-.26-1.03-.11-1.29.34s-.11 1.03.34 1.29l1.41.81c.45.26 1.03.11 1.29-.34s.11-1.03-.34-1.29l-1.41-.81zm-8.54-4.93c-.45-.26-1.03-.11-1.29.34s-.11 1.03.34 1.29l1.41.81c.45.26 1.03.11 1.29-.34s.11-1.03-.34-1.29l-1.41-.81z"/>
+              </svg>
+            </div>
+            <h4 class="platform-name">ChatGPT</h4>
+            <p class="platform-desc">Enhance prompts directly inside ChatGPT conversations using one shortcut.</p>
+            <div class="platform-status-badge">
+              <span class="status-dot"></span>
+              <span>Fully Supported</span>
+            </div>
+            <div class="platform-link-btn">
+              <span>Open ChatGPT</span>
+              <svg class="arrow-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+
+          <!-- Claude AI -->
+          <a href="https://claude.ai" target="_blank" rel="noopener noreferrer" class="platform-card claude-card">
+            <div class="platform-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="platform-logo-wrapper claude-logo-bg">
+              <svg class="platform-svg" viewBox="0 0 16 16" fill="currentColor">
+                <path d="m3.127 10.604 3.135-1.76.053-.153-.053-.085H6.11l-.525-.032-1.791-.048-1.554-.065-1.505-.08-.38-.081L0 7.832l.036-.234.32-.214.455.04 1.009.069 1.513.105 1.097.064 1.626.17h.259l.036-.105-.089-.065-.068-.064-1.566-1.062-1.695-1.121-.887-.646-.48-.327-.243-.306-.104-.67.435-.48.585.04.15.04.593.456 1.267.981 1.654 1.218.242.202.097-.068.012-.049-.109-.181-.9-1.626-.96-1.655-.428-.686-.113-.411a2 2 0 0 1-.068-.484l.496-.674L4.446 0l.662.089.279.242.411.94.666 1.48 1.033 2.014.302.597.162.553.06.17h.105v-.097l.085-1.134.157-1.392.154-1.792.052-.504.25-.605.497-.327.387.186.319.456-.045.294-.19 1.23-.37 1.93-.243 1.29h.142l.161-.16.654-.868 1.097-1.372.484-.545.565-.601.363-.287h.686l.505.751-.226.775-.707.895-.585.759-.839 1.13-.524.904.048.072.125-.012 1.897-.403 1.024-.186 1.223-.21.553.258.06.263-.218.536-1.307.323-1.533.307-2.284.54-.028.02.032.04 1.029.098.44.024h1.077l2.005.15.525.346.315.424-.053.323-.807.411-3.631-.863-.872-.218h-.12v.073l.726.71 1.331 1.202 1.667 1.55.084.383-.214.302-.226-.032-1.464-1.101-.565-.497-1.28-1.077h-.084v.113l.295.432 1.557 2.34.08.718-.112.234-.404.141-.444-.08-.911-1.28-.94-1.44-.759-1.291-.093.053-.448 4.821-.21.246-.484.186-.403-.307-.214-.496.214-.98.258-1.28.21-1.016.19-1.263.112-.42-.008-.028-.092.012-.953 1.307-1.448 1.957-1.146 1.227-.274.109-.477-.247.045-.44.266-.39 1.586-2.018.956-1.25.617-.723-.004-.105h-.036l-4.212 2.736-.75.096-.324-.302.04-.496.154-.162 1.267-.871z"/>
+              </svg>
+            </div>
+            <h4 class="platform-name">Claude AI</h4>
+            <p class="platform-desc">Refactor prompts inline during active Claude conversations using a single shortcut.</p>
+            <div class="platform-status-badge">
+              <span class="status-dot"></span>
+              <span>Fully Supported</span>
+            </div>
+            <div class="platform-link-btn">
+              <span>Open Claude</span>
+              <svg class="arrow-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+
+          <!-- Google Gemini -->
+          <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="platform-card gemini-card">
+            <div class="platform-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="platform-logo-wrapper gemini-logo-bg">
+              <svg class="platform-svg" viewBox="0 0 24 24" fill="currentColor">
+                <!-- Large spark -->
+                <path d="M9.812 1.63a.81.81 0 0 1 1.376 0L12.56 3.65a5.7 5.7 0 0 0 3.79 3.79l2.02 1.372a.81.81 0 0 1 0 1.376L16.35 11.56a5.7 5.7 0 0 0-3.79 3.79l-1.372 2.02a.81.81 0 0 1-1.376 0L8.44 15.35a5.7 5.7 0 0 0-3.79-3.79L2.63 10.188a.81.81 0 0 1 0-1.376L4.65 8.44a5.7 5.7 0 0 0 3.79-3.79L9.812 1.63Z"/>
+                <!-- Small spark -->
+                <path d="M20.25 14.25a.375.375 0 0 1 .636 0l.477.7a1.88 1.88 0 0 0 1.194 1.194l.7.477a.375.375 0 0 1 0 .636l-.7.477a1.88 1.88 0 0 0-1.194 1.194l-.477.7a.375.375 0 0 1-.636 0l-.477-.7a1.88 1.88 0 0 0-1.194-1.194l-.7-.477a.375.375 0 0 1 0-.636l.7-.477a1.88 1.88 0 0 0 1.194-1.194l.477-.7Z"/>
+              </svg>
+            </div>
+            <h4 class="platform-name">Google Gemini</h4>
+            <p class="platform-desc">Optimize prompts directly inside Google Gemini's chat interface with one keyboard command.</p>
+            <div class="platform-status-badge">
+              <span class="status-dot"></span>
+              <span>Fully Supported</span>
+            </div>
+            <div class="platform-link-btn">
+              <span>Open Gemini</span>
+              <svg class="arrow-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+
+          <!-- Perplexity -->
+          <a href="https://www.perplexity.ai" target="_blank" rel="noopener noreferrer" class="platform-card perplexity-card">
+            <div class="platform-card-glow"></div>
+            <div class="card-particles">
+              <span class="card-particle p1"></span>
+              <span class="card-particle p2"></span>
+              <span class="card-particle p3"></span>
+            </div>
+            <div class="platform-logo-wrapper perplexity-logo-bg">
+              <svg class="platform-svg" viewBox="0 0 16 16" fill="currentColor">
+                <path fill-rule="evenodd" d="M8 .188a.5.5 0 0 1 .503.5V4.03l3.022-2.92.059-.048a.51.51 0 0 1 .49-.054.5.5 0 0 1 .306.46v3.247h1.117l.1.01a.5.5 0 0 1 .403.49v5.558a.5.5 0 0 1-.503.5H12.38v3.258a.5.5 0 0 1-.312.462.51.51 0 0 1-.55-.11l-3.016-3.018v3.448c0 .275-.225.5-.503.5a.5.5 0 0 1-.503-.5v-3.448l-3.018 3.019a.51.51 0 0 1-.548.11.5.5 0 0 1-.312-.463v-3.258H2.503a.5.5 0 0 1-.503-.5V5.215l.01-.1c.047-.229.25-.4.493-.4H3.62V1.469l.006-.074a.5.5 0 0 1 .302-.387.51.51 0 0 1 .547.102l3.023 2.92V.687c0-.276.225-.5.503-.5M4.626 9.333v3.984l2.87-2.872v-4.01zm3.877 1.113 2.871 2.871V9.333l-2.87-2.897zm3.733-1.668a.5.5 0 0 1 .145.35v1.145h.612V5.715H9.201zm-9.23 1.495h.613V9.13c0-.131.052-.257.145-.35l3.033-3.064h-3.79zm1.62-5.558H6.76L4.626 2.652zm4.613 0h2.134V2.652z"/>
+              </svg>
+            </div>
+            <h4 class="platform-name">Perplexity</h4>
+            <p class="platform-desc">Refine search prompts inline directly inside Perplexity's input box.</p>
+            <div class="platform-status-badge">
+              <span class="status-dot"></span>
+              <span>Fully Supported</span>
+            </div>
+            <div class="platform-link-btn">
+              <span>Open Perplexity</span>
+              <svg class="arrow-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- Legal Compatibility Disclaimer -->
+        <div class="platform-disclaimer">
+          <p>ChatGPT, Claude, Gemini, and Perplexity are trademarks of their respective owners. My Prompt Sucks is an independent third-party tool and is not affiliated with or endorsed by these companies.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Why This Exists Section -->
+    <section id="why-exists" class="why-exists-section">
+      <div class="container">
+        <div class="why-exists-grid">
+          
+          <!-- Left Content Area -->
+          <div class="why-exists-left">
+            <span class="why-exists-tag">Core Philosophy</span>
+            <h2 class="editorial-statement">
+              Most AI prompts fail before the AI even sees them.
+            </h2>
+            <div class="editorial-quote">
+              “Most prompts don’t fail because they’re short. They fail because they’re unclear.”
+            </div>
+            
+            <!-- Storyboard transition -->
+            <div class="transformation-storyboard">
+              <div class="storyboard-item">
+                <span class="storyboard-label">Raw Thought</span>
+                <div class="storyboard-bubble strike">make portfolio website</div>
+              </div>
+              <div class="storyboard-arrow">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+              <div class="storyboard-item">
+                <span class="storyboard-label">Structured instructions</span>
+                <div class="storyboard-bubble glow"># Role: Frontend Architect...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Content Area -->
+          <div class="why-exists-right">
+            <p class="explanation-paragraph">
+              Most of us type things like <code>"make login page"</code>, <code>"write article funny"</code>, or <code>"explain quantum physics"</code> into active input boxes, and then wonder why the AI responds with generic, mediocre garbage.
+            </p>
+            <p class="explanation-paragraph">
+              The problem usually isn’t the model. It’s the prompt structure. Modern LLMs are incredibly capable, but they require boundaries, clear roles, context, and detailed requirements to output high-performance answers.
+            </p>
+            <p class="explanation-paragraph">
+              Writing structured system prompts manually for every minor query is tedious. <strong>My Prompt Sucks</strong> was built to quietly fix that workflow. By pressing a single shortcut, your rough drafts are instantly restructured into professional, optimized instructions inline.
+            </p>
+            <p class="explanation-paragraph highlight-text">
+              It acts as a silent, intelligent layer between raw human thought and AI execution.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <div class="footer-logo">
+          <img src="assets/icon-16.png" alt="My Prompt Sucks logo inline" class="footer-logo-img">
+          <span>My Prompt Sucks</span>
+        </div>
+        <p class="footer-credit">Handcrafted with caffeine and bad prompts by Mohd Saif Ansari.</p>
+        <p class="footer-license">© 2026. Proprietary Source-Visible License. Personal use only.</p>
+      </div>
+
+      <div class="footer-right">
+        <div class="footer-links-group">
+          <span class="group-title">Links</span>
+          <a href="https://github.com/seffhunnn/my-prompt-sucks" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://github.com/sponsors/seffhunnn" target="_blank" rel="noopener noreferrer">GitHub Sponsors</a>
+          <a href="https://linkedin.com/in/seffhunnn" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

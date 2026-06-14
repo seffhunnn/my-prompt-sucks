@@ -32,14 +32,33 @@ You write things like *"write a code for login"* or *"make article funny"*, and 
 
 ---
 
+## Project Structure
+
+```
+my-prompt-sucks/
+├── extension/          # Chrome extension (packaged in GitHub Releases)
+│   ├── manifest.json
+│   ├── background.js
+│   ├── content.js
+│   ├── popup.html / popup.css / popup.js
+│   └── icons/
+└── website/            # Landing page (deployed separately)
+    ├── index.html
+    ├── style.css
+    ├── script.js
+    └── assets/
+```
+
+---
+
 ## Installation
 
-Since this is a lightweight developer utility, you load it directly into Chrome:
+The easiest way to install the extension:
 
-1. **Download the code**: Go to the **Releases** section on the right side of this page and download the latest ZIP file (or click the green **Code** button at the top of the repository page and select **Download ZIP**), then extract it on your computer.
+1. **Download the extension**: Go to the **[Releases](../../releases/latest)** section and download the latest `my-prompt-sucks-vX.X.X.zip` file, then extract it on your computer.
 2. **Open Extensions page**: Open Google Chrome and navigate to `chrome://extensions/`.
 3. **Developer Mode**: Toggle **Developer mode** in the top right corner.
-4. **Load Unpacked**: Click **Load unpacked** in the top left and select the project folder.
+4. **Load Unpacked**: Click **Load unpacked** and select the extracted `extension/` folder (or the extracted folder itself if unzipped).
 5. **Add API Key**: 
    - Click the extensions puzzle icon in your toolbar and select **My Prompt Sucks**.
    - Paste your Gemini API key (you can get a free key from [Google AI Studio](https://aistudio.google.com/)).

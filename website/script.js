@@ -913,17 +913,39 @@ Organize a 2-week development sprint for a team of 3 builders.
     return `${Math.floor(d / 365)}y ago`;
   }
 
-  function setText(id, t) { const e = document.getElementById(id); if (e && t) e.textContent = t; }
+  function setText(id, t) {
+    const e = document.getElementById(id);
+    if (e && t !== null && t !== undefined) {
+      e.classList.remove("version-loading-shimmer");
+      e.textContent = t;
+    }
+  }
   function showEl(id)      { const e = document.getElementById(id); if (e) e.style.display = ""; }
 
   function updateDynamicVersions(tag) {
     if (!tag) return;
-    const versionNum = tag.startsWith('v') ? tag.slice(1) : tag;
+    const isFallback = tag === "Latest Release" || tag === "Latest";
+    const versionNum = isFallback ? "Latest" : (tag.startsWith('v') ? tag.slice(1) : tag);
+    const resolvedTag = isFallback ? "Latest Release" : tag;
+
     document.querySelectorAll(".dynamic-version-num").forEach(el => {
+      el.classList.remove("version-loading-shimmer");
       el.textContent = versionNum;
+      el.style.opacity = "0";
+      el.style.transition = "opacity 0.25s ease-in-out";
+      requestAnimationFrame(() => {
+        el.style.opacity = "1";
+      });
     });
+
     document.querySelectorAll(".dynamic-version-tag").forEach(el => {
-      el.textContent = tag;
+      el.classList.remove("version-loading-shimmer");
+      el.textContent = resolvedTag;
+      el.style.opacity = "0";
+      el.style.transition = "opacity 0.25s ease-in-out";
+      requestAnimationFrame(() => {
+        el.style.opacity = "1";
+      });
     });
   }
 
@@ -1026,7 +1048,7 @@ Organize a 2-week development sprint for a team of 3 builders.
       if (!zipAsset) {
         log("WARNING: No ZIP asset found — falling back to release page");
         markButtonsFallback();
-        updateDynamicVersions("v1.0.2");
+        updateDynamicVersions("Latest Release");
         setText("hero-meta-version", "Latest Release");
         setText("wt-meta-version",  "Latest Release");
         ["hero-release-meta", "walkthrough-release-meta"].forEach(id => {
@@ -1077,7 +1099,7 @@ Organize a 2-week development sprint for a team of 3 builders.
     } catch (err) {
       log("ERROR — API request failed", err.message);
       markButtonsFallback();
-      updateDynamicVersions("v1.0.2");
+      updateDynamicVersions("Latest Release");
       setText("hero-meta-version", "Latest Release");
       setText("wt-meta-version",  "Latest Release");
       ["hero-release-meta", "walkthrough-release-meta"].forEach(id => {

@@ -5,6 +5,26 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Load dynamic extension version from manifest.json
+  try {
+    const manifestVersion = chrome.runtime.getManifest().version;
+    document.querySelectorAll(".extension-version").forEach(el => {
+      el.classList.remove("version-loading-shimmer");
+      el.textContent = `v${manifestVersion}`;
+      el.style.opacity = "0";
+      el.style.transition = "opacity 0.2s ease-in-out";
+      requestAnimationFrame(() => {
+        el.style.opacity = "1";
+      });
+    });
+  } catch (err) {
+    console.error("Failed to load extension version from manifest:", err);
+    document.querySelectorAll(".extension-version").forEach(el => {
+      el.classList.remove("version-loading-shimmer");
+      el.textContent = "Latest Version";
+    });
+  }
+
   // Configured target AI platforms
   const SUPPORTED_HOSTS = [
     "chatgpt.com",

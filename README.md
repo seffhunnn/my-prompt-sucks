@@ -81,7 +81,7 @@ my-prompt-sucks/
 
 Deploy the extension locally in under 2 minutes:
 
-1. **Download Build**: Go to **[Releases](../../releases/latest)**, download `my-prompt-sucks-v1.0.2.zip`, and extract it.
+1. **Download Build**: Go to **[Releases](../../releases/latest)**, download `my-prompt-sucks-v*.*.*.zip`, and extract it.
 2. **Open Extensions**: Open Google Chrome and navigate to `chrome://extensions/`.
 3. **Developer Mode**: Toggle **Developer mode** **ON** in the top-right corner.
 4. **Load Unpacked**: Click **Load unpacked** in the top-left and select the extracted `my-prompt-sucks/` folder.
